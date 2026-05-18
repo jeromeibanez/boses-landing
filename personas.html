@@ -799,6 +799,12 @@
       loaderProgressBar.style.width = stage.pct + '%';
     }
     function startLoader() {
+      // Hide the hero — during generation the loader IS the page, not
+      // a card layered over the marketing banner. Restored on the
+      // error paths below if generation fails (form re-appears in its
+      // hero context). On success the hero stays hidden as the
+      // results section takes over (see the stage 2 success path).
+      heroSection.style.display = 'none';
       // Reset visual state in case of retry after error
       loaderProgressBar.style.width = '4%';
       loaderStatusEl.textContent = LOADER_STAGES[0].text;
@@ -1080,7 +1086,10 @@
           body: JSON.stringify(data),
         });
         if (!resp.ok) {
+          // Restore the hero — startLoader() hid it, but we're not
+          // showing results, so the form needs its banner context back.
           stopLoader();
+          heroSection.style.display = '';
           stage2Form.style.display = '';
           const body = await resp.json().catch(() => ({}));
           if (resp.status === 400) {
@@ -1132,7 +1141,10 @@
         resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } catch (err) {
         console.error('stage 2 submit failed', err);
+        // Network/unexpected error — restore the hero (startLoader hid
+        // it) so the form re-appears with its banner context.
         stopLoader();
+        heroSection.style.display = '';
         stage2Form.style.display = '';
         showError(stage2Error, 'Network error. Please check your connection and try again.');
       } finally {
