@@ -43,6 +43,10 @@ Philippines, Indonesia, Vietnam, Thailand, Malaysia, Singapore.
 
 Early access / pre-launch. Users request access by booking a 30-minute walkthrough call with the Boses team.
 
+## Interactive Demo
+
+A free, no-account-required demo at https://www.temujintechnologies.com/personas lets prospects generate 5 AI personas for any Southeast Asian market by submitting a short audience description. The form captures name, company, work email, country (PH/SG/MY/ID/VN/TH only), and audience definition. Gated by Cloudflare Turnstile and rate-limited. The generated panel includes name, age, gender, location, occupation, income level, day-in-the-life narrative, values, and a behavioral insight per persona. Output is shareable via a permalink (`?token=...`).
+
 ## Optional
 
 - Privacy-first: no PII stored in simulations; all persona data is synthetic
