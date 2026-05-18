@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Generate 3 AI personas free — Boses</title>
-  <meta name="description" content="See 3 AI personas grounded in your target Southeast Asian market — free, in about 20 seconds. Tell Boses your audience and get back a panel that looks like the real people you sell to." />
+  <meta name="description" content="See 3 AI personas grounded in your target Southeast Asian market — free, in under a minute. Tell Boses your audience and get back a panel that looks like the real people you sell to." />
   <link rel="canonical" href="https://www.temujintechnologies.com/personas" />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="Temujin Technologies" />
@@ -328,7 +328,13 @@
 
     .persona-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      /* Wider min so each card has room for the rich in-app-style
+         sections (pain points, aspirations, digital behavior, etc.)
+         without compressing the prose. 2 cards across at desktop,
+         1 across on mobile/tablet. The 3rd card wraps to row 2
+         left-aligned — accepted as visually fine; the bigger fight is
+         per-card content density. */
+      grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
       gap: 22px;
       margin-bottom: 48px;
     }
@@ -420,6 +426,54 @@
       border-radius: 99px;
     }
 
+    /* "Family" inline label/value row — single short fact, no need
+       for its own section block. */
+    .persona-fact {
+      font-size: 0.8438rem;
+      color: #3f3f46;
+      line-height: 1.55;
+    }
+    .persona-fact-label {
+      display: inline-block;
+      font-size: 0.6875rem; font-weight: 600;
+      color: #a1a1aa;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-right: 6px;
+    }
+
+    /* Personality trait chips — tinted-indigo to match the brand accent
+       (the only place per-card where we lean into the page's accent;
+       avatars + values stay neutral so traits read as a distinct
+       psychographic signal). */
+    .persona-traits { display: flex; flex-wrap: wrap; gap: 6px; }
+    .persona-trait-chip {
+      padding: 3px 9px;
+      background: rgba(99,102,241,0.08);
+      color: #4338ca;
+      font-size: 0.7188rem; font-weight: 500;
+      border-radius: 6px;
+    }
+
+    /* Two-column grid inside a card for paired narrative sections
+       (pain points / aspirations, digital life / buying triggers).
+       Mirrors the in-app PersonaDetailShell TwoColGrid pattern. */
+    .persona-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 560px) {
+      .persona-2col { grid-template-columns: 1fr; }
+    }
+    .persona-mini-section { min-width: 0; }
+    .persona-mini-section p {
+      font-size: 0.8125rem;
+      line-height: 1.55;
+      color: #3f3f46;
+      margin: 0;
+    }
+
     .persona-insight p {
       font-size: 0.8438rem; line-height: 1.55;
       color: #52525b;
@@ -478,7 +532,7 @@
       <div class="container">
         <div class="hero-content">
           <span class="hero-eyebrow">FREE INTERACTIVE DEMO</span>
-          <h1 id="form-h1">See <span class="accent">3 AI personas</span> from your target market — in 20 seconds</h1>
+          <h1 id="form-h1">See <span class="accent">3 AI personas</span> from your target market — in under a minute</h1>
           <p class="sub">
             Boses generates AI personas grounded in real Southeast Asian behavioral data.
             Tell us your audience and we'll show you what a research panel actually looks like.
@@ -488,7 +542,7 @@
           <form class="form-card" id="stage1-form" novalidate>
             <p class="step-label">Step 1 of 2</p>
             <h2>Describe your audience</h2>
-            <p class="form-intro">Pick a Southeast Asian market and describe the consumers you want to study. We'll generate a panel of 3 in about 20 seconds.</p>
+            <p class="form-intro">Pick a Southeast Asian market and describe the consumers you want to study. We'll generate a panel of 3 detailed personas in 20–30 seconds.</p>
 
             <div class="form-error" id="stage1-error" role="alert"></div>
 
@@ -583,7 +637,7 @@
           <div class="loader-progress" aria-hidden="true">
             <div class="loader-progress-bar" id="loader-progress-bar"></div>
           </div>
-          <p class="loader-hint">This usually takes 10–15 seconds.</p>
+          <p class="loader-hint">This usually takes 20–30 seconds — we're generating ~15 fields per persona.</p>
         </div>
       </div>
     </section>
@@ -709,12 +763,18 @@
     // timed animation. Bar holds at ~88% until the API actually returns,
     // then snaps to 100% so the completion feels earned.
     // ═══════════════════════════════════════════════════════════════════
+    // 6 stages × ~4s = ~24s total cycle, aligned with the new
+    // ~20-30s LLM wait once we expanded the persona shape to ~15 fields
+    // (family situation, personality, day-in-life, pain points,
+    // aspirations, digital, buying triggers, values, researcher's
+    // note). Last stage holds until the API actually returns.
     const LOADER_STAGES = [
-      { pct: 12, text: 'Analyzing your audience definition…' },
-      { pct: 30, text: 'Drafting persona profiles…' },
-      { pct: 54, text: 'Grounding in local market context…' },
-      { pct: 74, text: 'Adding behavioral signals…' },
-      { pct: 88, text: 'Finalizing…' },
+      { pct: 10, text: 'Analyzing your audience definition…' },
+      { pct: 26, text: 'Drafting persona profiles…' },
+      { pct: 44, text: 'Grounding in local market context…' },
+      { pct: 60, text: 'Mapping pain points and aspirations…' },
+      { pct: 76, text: 'Adding digital habits and buying triggers…' },
+      { pct: 88, text: 'Finalizing the researcher’s notes…' },
     ];
     let loaderInterval = null;
     function applyLoaderStage(stage) {
@@ -745,7 +805,7 @@
         if (i >= LOADER_STAGES.length) return;
         applyLoaderStage(LOADER_STAGES[i]);
         i++;
-      }, 3000);
+      }, 4000);
     }
     function stopLoader() {
       if (loaderInterval) {
@@ -788,6 +848,19 @@
       return AVATAR_PALETTE[Math.abs(h) % AVATAR_PALETTE.length];
     }
 
+    // Build a "MINI SECTION" — a label + paragraph, used for the rich
+    // narrative fields (pain points, aspirations, digital, buying).
+    // Returns empty string when the field is missing so old permalinks
+    // (pre-2026-05-18 shape) render cleanly with the older sections only.
+    function miniSection(label, value) {
+      if (!value) return '';
+      return `
+        <div class="persona-mini-section">
+          <div class="persona-section-label">${escapeHtml(label)}</div>
+          <p>${escapeHtml(value)}</p>
+        </div>`;
+    }
+
     function renderPersonas(personas) {
       personaGrid.innerHTML = '';
       for (const p of personas) {
@@ -796,6 +869,43 @@
         const valueChips = (p.values || [])
           .map(v => `<span class="persona-value-chip">${escapeHtml(v)}</span>`)
           .join('');
+
+        // Optional rich sections — only emit when the field is present
+        // so older saved personas (without the new fields) still render.
+        const familyBlock = p.family_situation
+          ? `<div class="persona-fact"><span class="persona-fact-label">Family</span>${escapeHtml(p.family_situation)}</div>`
+          : '';
+
+        const traitChips = (p.personality_traits || [])
+          .map(t => `<span class="persona-trait-chip">${escapeHtml(t)}</span>`)
+          .join('');
+        const traitsBlock = traitChips
+          ? `<div class="persona-section">
+               <div class="persona-section-label">Personality</div>
+               <div class="persona-traits">${traitChips}</div>
+             </div>`
+          : '';
+
+        // Pair the four big narrative fields into two 2-col rows. If
+        // both fields in a pair are missing, drop the row entirely.
+        // If only one is present, the empty mini-section gracefully
+        // leaves the other column blank — acceptable for transitional
+        // permalinks with partial new-shape data.
+        const painAspRow =
+          p.pain_points || p.aspirational_identity
+            ? `<div class="persona-2col">
+                 ${miniSection('Pain points', p.pain_points)}
+                 ${miniSection('Aspirations', p.aspirational_identity)}
+               </div>`
+            : '';
+        const digitalBuyingRow =
+          p.digital_behavior || p.buying_triggers
+            ? `<div class="persona-2col">
+                 ${miniSection('Digital life', p.digital_behavior)}
+                 ${miniSection('Buying triggers', p.buying_triggers)}
+               </div>`
+            : '';
+
         const card = document.createElement('article');
         card.className = 'persona-card';
         card.innerHTML = `
@@ -810,10 +920,14 @@
           <div class="persona-chips">
             <span class="persona-chip">${escapeHtml(p.income_level)} income</span>
           </div>
+          ${familyBlock}
+          ${traitsBlock}
           <div class="persona-quote">
             <div class="persona-quote-label">A day in their life</div>
             <blockquote>${escapeHtml(p.day_in_life)}</blockquote>
           </div>
+          ${painAspRow}
+          ${digitalBuyingRow}
           <div class="persona-section">
             <div class="persona-section-label">What they value</div>
             <div class="persona-value-chips">${valueChips}</div>
