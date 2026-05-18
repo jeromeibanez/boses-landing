@@ -684,6 +684,27 @@
     })();
 
     // ═══════════════════════════════════════════════════════════════════
+    // Cold-start pre-warm. The Boses API is hosted on Render's free
+    // plan, which spins the service down after 15 minutes of inactivity.
+    // Cold start takes 30-60 seconds, during which the first request
+    // hangs and the user's browser fetch usually times out with a
+    // "Network error" — they bounce, lead lost.
+    //
+    // Pings /health when /personas loads so the backend is (probably)
+    // awake by the time the user clicks Generate. Best-effort: we swallow
+    // all errors, expose nothing to the user, and don't care about the
+    // response body. The mere act of the request hitting Render is what
+    // wakes the dyno.
+    //
+    // /health is at the root, not under /api/v1 — strip the version
+    // suffix from API_BASE to get the API root.
+    try {
+      const API_ROOT = API_BASE.replace(/\/api\/v1$/, '');
+      fetch(`${API_ROOT}/health`, { method: 'GET', mode: 'cors', cache: 'no-store' })
+        .catch(() => {});
+    } catch (e) {}
+
+    // ═══════════════════════════════════════════════════════════════════
     // Element refs
     // ═══════════════════════════════════════════════════════════════════
     const stage1Form = document.getElementById('stage1-form');
