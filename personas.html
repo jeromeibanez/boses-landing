@@ -407,12 +407,16 @@
               ></textarea>
             </div>
 
-            <!-- Cloudflare Turnstile widget. Site key below is Cloudflare's
-                 always-passes TEST key (1x00000000000000000000AA, publicly
-                 documented). REPLACE with the real site key registered for
-                 www.temujintechnologies.com before going live. -->
+            <!-- Cloudflare Turnstile widget. Site key is the production key
+                 registered for www.temujintechnologies.com (safe to commit —
+                 site keys are public; the secret stays in Render env as
+                 TURNSTILE_SECRET_KEY). Cloudflare's "always passes" test key
+                 (1x00000000000000000000AA) and "always fails" key
+                 (1x00000000000000000000FF) are available if you ever need
+                 to test the success / rejection paths without going through
+                 a real challenge. -->
             <div class="turnstile-wrap">
-              <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA"></div>
+              <div class="cf-turnstile" data-sitekey="0x4AAAAAADR0XTwT2rfl3JZp"></div>
             </div>
 
             <label class="consent">
