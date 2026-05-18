@@ -237,6 +237,23 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* The loader's wrapping section. Centered vertically in the viewport
+       so the card doesn't strand at the top with empty space below it.
+       min-height claims the full visible area minus the top nav (56px)
+       so flex centering has somewhere to align against. Default
+       display:none is on the inline style attribute — when the JS shows
+       the loader it clears that, and the flex+center rules below take
+       over. */
+    #generation-loader-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 56px);
+      padding: 32px 0;
+      box-sizing: border-box;
+    }
+    #generation-loader-section > .container { width: 100%; }
+
     /* Generation loader — shown while the LLM call is in flight.
        Replaces the form visually so users feel "something is happening"
        rather than staring at a stuck spinner on the submit button. */
@@ -618,7 +635,7 @@
          Replaces the form visually so the user sees real movement
          (cycling status, animated progress bar) instead of a stuck
          button spinner. -->
-    <section class="form-section" id="generation-loader-section" style="display: none; padding-bottom: 120px;">
+    <section class="form-section" id="generation-loader-section" style="display: none;">
       <div class="container">
         <div class="generation-loader" id="generation-loader" aria-live="polite" aria-busy="true">
           <div class="loader-spinner-lg" aria-hidden="true"></div>
@@ -655,7 +672,7 @@
     </section>
   </main>
 
-  <footer>
+  <footer id="page-footer">
     <div class="container">
       <div class="footer-top">
         <div class="footer-brand">
@@ -719,6 +736,7 @@
     const readyPill = document.getElementById('ready-pill');
 
     const heroSection = document.getElementById('hero-section');
+    const pageFooter = document.getElementById('page-footer');
     const resultsSection = document.getElementById('results');
     const personaGrid = document.getElementById('persona-grid');
     const regenerateBtn = document.getElementById('regenerate-btn');
@@ -799,12 +817,14 @@
       loaderProgressBar.style.width = stage.pct + '%';
     }
     function startLoader() {
-      // Hide the hero — during generation the loader IS the page, not
-      // a card layered over the marketing banner. Restored on the
-      // error paths below if generation fails (form re-appears in its
-      // hero context). On success the hero stays hidden as the
-      // results section takes over (see the stage 2 success path).
+      // Hide the hero AND the footer — during generation the loader IS
+      // the page. Without this, the card stranded above empty space
+      // with a dark footer below looks like two disconnected layouts
+      // glued together. Both restored on the error paths below if
+      // generation fails. On success the hero stays hidden but the
+      // footer comes back for the results layout.
       heroSection.style.display = 'none';
+      pageFooter.style.display = 'none';
       // Reset visual state in case of retry after error
       loaderProgressBar.style.width = '4%';
       loaderStatusEl.textContent = LOADER_STAGES[0].text;
@@ -829,6 +849,10 @@
         clearInterval(loaderInterval);
         loaderInterval = null;
       }
+      // Restore the footer — both downstream paths (results reveal on
+      // success, form return on error) want the footer back. Done here
+      // so callers don't each have to remember to do it.
+      pageFooter.style.display = '';
       // Snap to 100% so the bar visibly completes before we hide it.
       loaderProgressBar.style.width = '100%';
       setTimeout(() => {
