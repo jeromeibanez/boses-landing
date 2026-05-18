@@ -474,7 +474,7 @@
   </nav>
 
   <main>
-    <section class="hero" aria-labelledby="form-h1">
+    <section class="hero" id="hero-section" aria-labelledby="form-h1">
       <div class="container">
         <div class="hero-content">
           <span class="hero-eyebrow">FREE INTERACTIVE DEMO</span>
@@ -653,6 +653,7 @@
     const stage2Error = document.getElementById('stage2-error');
     const readyPill = document.getElementById('ready-pill');
 
+    const heroSection = document.getElementById('hero-section');
     const resultsSection = document.getElementById('results');
     const personaGrid = document.getElementById('persona-grid');
     const regenerateBtn = document.getElementById('regenerate-btn');
@@ -995,8 +996,11 @@
           window.history.replaceState({}, '', newURL);
         } catch (e) {}
 
-        // Stop the loader theatre, reveal results
+        // Stop the loader theatre, hide the hero banner so the personas
+        // become the page (per Jerome: "the personas should be the main
+        // start, not the hero"), and reveal results.
         stopLoader();
+        heroSection.style.display = 'none';
         stage1Form.style.display = 'none';
         stage2Form.style.display = 'none';
         resultsSection.classList.add('visible');
@@ -1011,7 +1015,7 @@
       }
     });
 
-    // "Try another audience" — full reset
+    // "Try another audience" — full reset back to stage 1
     regenerateBtn.addEventListener('click', () => {
       try { window.history.replaceState({}, '', window.location.pathname); } catch (e) {}
       stage1Ticket = null;
@@ -1019,6 +1023,9 @@
       preGeneratedPersonas = null;
       resultsSection.classList.remove('visible');
       stage2Form.style.display = 'none';
+      // Bring the hero (and the stage-1 form nested inside it) back so
+      // the user has the full landing experience for the next generation.
+      heroSection.style.display = '';
       stage1Form.style.display = '';
       // Reset form values
       stage1Form.reset();
@@ -1036,7 +1043,11 @@
       const token = params.get('token');
       if (!token) return;
 
-      // Optimistic: hide the form, show "Loading…" in the results section
+      // Optimistic: hide the hero + form, show "Loading…" in the
+      // results section. On a permalink visit the user already knows
+      // what they're here for — the personas — so we don't re-show the
+      // pitch banner.
+      heroSection.style.display = 'none';
       stage1Form.style.display = 'none';
       stage2Form.style.display = 'none';
       resultsSection.classList.add('visible');
@@ -1048,6 +1059,9 @@
           personaGrid.innerHTML = '<p style="text-align:center;color:#b91c1c;font-size:0.9375rem;">That link is no longer available. Generate a new panel below.</p>';
           setTimeout(() => {
             resultsSection.classList.remove('visible');
+            // Token was bad — bring the hero + stage-1 form back so the
+            // user can generate fresh.
+            heroSection.style.display = '';
             stage1Form.style.display = '';
             try { window.history.replaceState({}, '', window.location.pathname); } catch (e) {}
           }, 2500);
