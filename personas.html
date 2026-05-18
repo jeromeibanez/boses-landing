@@ -264,7 +264,7 @@
 
     .persona-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
       gap: 22px;
       margin-bottom: 48px;
     }
@@ -272,43 +272,94 @@
       background: #fff;
       border: 1px solid #e4e4e7;
       border-radius: 14px;
-      padding: 24px;
+      padding: 26px 24px 24px;
       transition: border-color 0.18s, box-shadow 0.18s;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
     }
-    .persona-card:hover { border-color: #c7d2fe; box-shadow: 0 4px 20px rgba(99,102,241,0.06); }
-    .persona-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .persona-card:hover { border-color: #d4d4d8; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
+
+    .persona-head { display: flex; align-items: flex-start; gap: 14px; }
     .persona-avatar {
-      width: 48px; height: 48px;
+      width: 44px; height: 44px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #818cf8, #6366f1);
-      color: #fff;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.125rem; font-weight: 700; flex-shrink: 0;
+      font-size: 1rem; font-weight: 600;
+      flex-shrink: 0;
+      letter-spacing: -0.01em;
+      /* bg + color set inline per-persona via avatarColorFor() */
     }
-    .persona-name { font-weight: 700; font-size: 1.0625rem; color: #0f0f0f; line-height: 1.3; }
-    .persona-meta { font-size: 0.8125rem; color: #71717a; margin-top: 2px; }
-    .persona-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
-    .persona-tag { padding: 3px 9px; background: #f4f4f5; color: #52525b; font-size: 0.75rem; font-weight: 500; border-radius: 6px; }
-    .persona-tag.income { background: rgba(99,102,241,0.08); color: #4f46e5; }
-    .persona-section { margin-top: 14px; }
-    .persona-section h4 {
+    .persona-head-text { min-width: 0; flex: 1; }
+    .persona-name {
+      font-weight: 600; font-size: 1rem;
+      color: #0f0f0f; line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+    .persona-meta { font-size: 0.8125rem; color: #a1a1aa; margin-top: 3px; }
+    .persona-role { font-size: 0.8125rem; color: #52525b; margin-top: 5px; line-height: 1.45; }
+
+    .persona-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .persona-chip {
+      padding: 3px 9px;
+      background: #fafafa;
+      border: 1px solid #e4e4e7;
+      color: #52525b;
+      font-size: 0.7188rem; font-weight: 500;
+      border-radius: 6px;
+      letter-spacing: 0.005em;
+    }
+
+    .persona-quote {
+      background: #fafafa;
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .persona-quote-label {
       font-size: 0.6875rem; font-weight: 600;
-      color: #71717a;
+      color: #a1a1aa;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin: 0 0 6px;
+      letter-spacing: 0.07em;
+      margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
     }
-    .persona-section p { font-size: 0.875rem; line-height: 1.55; color: #27272a; margin: 0; }
-    .persona-section ul { font-size: 0.875rem; color: #27272a; padding-left: 18px; margin: 0; line-height: 1.55; }
-    .persona-section ul li { margin-bottom: 2px; }
-    .persona-insight {
-      margin-top: 14px;
-      padding: 12px 14px;
-      background: rgba(99,102,241,0.05);
-      border-left: 3px solid #6366f1;
-      border-radius: 0 8px 8px 0;
-      font-size: 0.8125rem; line-height: 1.55;
-      color: #3f3f46; font-style: italic;
+    .persona-quote-label::before {
+      content: "❝";
+      font-size: 1rem;
+      color: #d4d4d8;
+      line-height: 1;
+      font-style: normal;
+    }
+    .persona-quote blockquote {
+      margin: 0;
+      padding: 0 0 0 12px;
+      border-left: 2px solid #d4d4d8;
+      font-size: 0.875rem; line-height: 1.6;
+      color: #3f3f46;
+      font-style: italic;
+    }
+
+    .persona-section-label {
+      font-size: 0.6875rem; font-weight: 600;
+      color: #a1a1aa;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 8px;
+    }
+
+    .persona-value-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .persona-value-chip {
+      padding: 4px 10px;
+      background: #f4f4f5;
+      color: #3f3f46;
+      font-size: 0.75rem; font-weight: 500;
+      border-radius: 99px;
+    }
+
+    .persona-insight p {
+      font-size: 0.8438rem; line-height: 1.55;
+      color: #52525b;
+      margin: 0;
     }
 
     .post-results-cta {
@@ -564,34 +615,58 @@
         .replace(/'/g, '&#39;');
     }
 
+    // Muted-tint avatar palette. Deterministic-per-name so a given
+    // persona always gets the same chip color across renders (and so
+    // 5 personas in one panel feel visually distinct rather than all
+    // wearing the same indigo).
+    const AVATAR_PALETTE = [
+      { bg: '#fef3c7', fg: '#92400e' }, // amber
+      { bg: '#d1fae5', fg: '#047857' }, // emerald
+      { bg: '#dbeafe', fg: '#1e40af' }, // blue
+      { bg: '#e0e7ff', fg: '#3730a3' }, // indigo
+      { bg: '#fce7f3', fg: '#9d174d' }, // pink
+      { bg: '#fee2e2', fg: '#991b1b' }, // red
+    ];
+    function avatarColorFor(name) {
+      let h = 0;
+      for (let i = 0; i < name.length; i++) h = ((h * 31) + name.charCodeAt(i)) | 0;
+      return AVATAR_PALETTE[Math.abs(h) % AVATAR_PALETTE.length];
+    }
+
     function renderPersonas(personas) {
       personaGrid.innerHTML = '';
       for (const p of personas) {
         const initial = (p.name || '?').charAt(0).toUpperCase();
-        const valuesHTML = (p.values || []).map(v => `<li>${escapeHtml(v)}</li>`).join('');
+        const color = avatarColorFor(p.name || '');
+        const valueChips = (p.values || [])
+          .map(v => `<span class="persona-value-chip">${escapeHtml(v)}</span>`)
+          .join('');
         const card = document.createElement('article');
         card.className = 'persona-card';
         card.innerHTML = `
           <div class="persona-head">
-            <div class="persona-avatar">${escapeHtml(initial)}</div>
-            <div>
+            <div class="persona-avatar" style="background:${color.bg};color:${color.fg}">${escapeHtml(initial)}</div>
+            <div class="persona-head-text">
               <div class="persona-name">${escapeHtml(p.name)}</div>
-              <div class="persona-meta">${escapeHtml(p.age)} · ${escapeHtml(p.gender)} · ${escapeHtml(p.occupation)}</div>
+              <div class="persona-meta">${escapeHtml(p.age)} · ${escapeHtml(p.gender)} · ${escapeHtml(p.location)}</div>
+              <div class="persona-role">${escapeHtml(p.occupation)}</div>
             </div>
           </div>
-          <div class="persona-tags">
-            <span class="persona-tag">${escapeHtml(p.location)}</span>
-            <span class="persona-tag income">${escapeHtml(p.income_level)} income</span>
+          <div class="persona-chips">
+            <span class="persona-chip">${escapeHtml(p.income_level)} income</span>
+          </div>
+          <div class="persona-quote">
+            <div class="persona-quote-label">A day in their life</div>
+            <blockquote>${escapeHtml(p.day_in_life)}</blockquote>
           </div>
           <div class="persona-section">
-            <h4>Day in the life</h4>
-            <p>${escapeHtml(p.day_in_life)}</p>
+            <div class="persona-section-label">What they value</div>
+            <div class="persona-value-chips">${valueChips}</div>
           </div>
-          <div class="persona-section">
-            <h4>Values</h4>
-            <ul>${valuesHTML}</ul>
+          <div class="persona-section persona-insight">
+            <div class="persona-section-label">Researcher's note</div>
+            <p>${escapeHtml(p.behavioral_insight)}</p>
           </div>
-          <div class="persona-insight">${escapeHtml(p.behavioral_insight)}</div>
         `;
         personaGrid.appendChild(card);
       }
