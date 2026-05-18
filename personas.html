@@ -13,7 +13,7 @@
 
   <!-- Open Graph -->
   <meta property="og:title" content="Generate 5 AI personas free — Boses" />
-  <meta property="og:description" content="See 5 AI personas grounded in your target SEA market. Free. Under a minute." />
+  <meta property="og:description" content="See 5 AI personas grounded in your target SEA market. Free." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.temujintechnologies.com/personas" />
   <meta property="og:image" content="https://www.temujintechnologies.com/og-image.png" />
@@ -61,7 +61,7 @@
     img { max-width: 100%; display: block; }
     .container { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
-    /* Nav (lifted from index.html with simplified link set for this page) */
+    /* Nav */
     .nav {
       position: sticky; top: 0; z-index: 50;
       width: 100%;
@@ -72,22 +72,15 @@
       padding: 18px 24px;
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
-    .nav-logo {
-      font-size: 1.25rem; font-weight: 700; color: #fff;
-      letter-spacing: -0.03em; text-decoration: none;
-    }
+    .nav-logo { font-size: 1.25rem; font-weight: 700; color: #fff; letter-spacing: -0.03em; text-decoration: none; }
     .nav-logo-dot { color: #6366f1; }
-    .nav-back {
-      color: rgba(255,255,255,0.65); font-size: 0.9375rem; font-weight: 500;
-      text-decoration: none; transition: color 0.18s;
-    }
+    .nav-back { color: rgba(255,255,255,0.65); font-size: 0.9375rem; font-weight: 500; text-decoration: none; transition: color 0.18s; }
     .nav-back:hover { color: #fff; }
 
-    /* Hero — dark, indigo-tinted, mirrors index.html's hero */
+    /* Hero */
     .hero {
       position: relative;
-      background: #080810;
-      color: #fff;
+      background: #080810; color: #fff;
       padding: 80px 0 120px;
       overflow: hidden;
     }
@@ -111,8 +104,7 @@
     .hero h1 {
       font-size: clamp(2rem, 5vw, 3rem);
       font-weight: 800; line-height: 1.15;
-      color: #fff; margin: 0 0 20px;
-      letter-spacing: -0.02em;
+      color: #fff; margin: 0 0 20px; letter-spacing: -0.02em;
     }
     .hero h1 .accent {
       background: linear-gradient(135deg, #a5b4fc 0%, #818cf8 40%, #c4b5fd 100%);
@@ -122,11 +114,10 @@
     }
     .hero p.sub {
       font-size: 1.0625rem; color: rgba(255,255,255,0.75);
-      max-width: 560px; margin: 0 auto 40px;
-      line-height: 1.65;
+      max-width: 560px; margin: 0 auto 40px; line-height: 1.65;
     }
 
-    /* Form card — sits inside the hero, white-on-dark */
+    /* Card — used by both stage 1 and stage 2 forms */
     .form-card {
       background: #fff;
       border-radius: 16px;
@@ -135,6 +126,22 @@
       text-align: left;
       max-width: 560px;
       margin: 0 auto;
+    }
+    .form-card .step-label {
+      font-size: 0.75rem; font-weight: 600;
+      color: #6366f1;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0 0 8px;
+    }
+    .form-card h2 {
+      font-size: 1.375rem; font-weight: 700;
+      color: #0f0f0f; margin: 0 0 8px;
+      letter-spacing: -0.015em;
+    }
+    .form-card .form-intro {
+      font-size: 0.9375rem; color: #52525b;
+      margin: 0 0 22px; line-height: 1.55;
     }
     .form-card label {
       display: block;
@@ -162,7 +169,7 @@
       border-color: #6366f1;
       box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
     }
-    .form-card textarea { resize: vertical; min-height: 92px; line-height: 1.55; }
+    .form-card textarea { resize: vertical; min-height: 100px; line-height: 1.55; }
     .form-card .field { margin-bottom: 18px; }
     .form-card .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     @media (max-width: 480px) { .form-card .field-row { grid-template-columns: 1fr; } }
@@ -190,6 +197,26 @@
     }
     .form-card .privacy-note a { color: #4f46e5; text-decoration: underline; }
 
+    /* Stage-2 specific: "your panel is being generated" hint */
+    .ready-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; margin: 0 0 18px;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: 100px;
+      color: #047857;
+      font-size: 0.75rem; font-weight: 600;
+    }
+    .ready-pill::before {
+      content: ''; width: 6px; height: 6px;
+      background: #10b981; border-radius: 50%;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
     .btn-primary {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
       padding: 13px 26px;
@@ -205,7 +232,6 @@
     .btn-primary:disabled { background: #a5b4fc; cursor: not-allowed; }
     .btn-primary.lg { padding: 16px 32px; font-size: 1rem; border-radius: 12px; width: 100%; }
 
-    /* Spinner during loading */
     .spinner {
       display: inline-block; width: 16px; height: 16px;
       border: 2px solid rgba(255,255,255,0.4);
@@ -217,11 +243,7 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Results section */
-    .results {
-      display: none;
-      padding: 80px 0;
-      background: #fafafa;
-    }
+    .results { display: none; padding: 80px 0; background: #fafafa; }
     .results.visible { display: block; }
     .results-header { text-align: center; max-width: 600px; margin: 0 auto 48px; }
     .results-header .eyebrow {
@@ -236,8 +258,7 @@
     .results-header h2 {
       font-size: clamp(1.5rem, 3vw, 2rem);
       font-weight: 700; color: #0f0f0f;
-      margin: 0 0 12px;
-      letter-spacing: -0.015em;
+      margin: 0 0 12px; letter-spacing: -0.015em;
     }
     .results-header p { color: #52525b; margin: 0; font-size: 1rem; }
 
@@ -254,10 +275,7 @@
       padding: 24px;
       transition: border-color 0.18s, box-shadow 0.18s;
     }
-    .persona-card:hover {
-      border-color: #c7d2fe;
-      box-shadow: 0 4px 20px rgba(99,102,241,0.06);
-    }
+    .persona-card:hover { border-color: #c7d2fe; box-shadow: 0 4px 20px rgba(99,102,241,0.06); }
     .persona-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
     .persona-avatar {
       width: 48px; height: 48px;
@@ -265,23 +283,13 @@
       background: linear-gradient(135deg, #818cf8, #6366f1);
       color: #fff;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.125rem; font-weight: 700;
-      flex-shrink: 0;
+      font-size: 1.125rem; font-weight: 700; flex-shrink: 0;
     }
     .persona-name { font-weight: 700; font-size: 1.0625rem; color: #0f0f0f; line-height: 1.3; }
     .persona-meta { font-size: 0.8125rem; color: #71717a; margin-top: 2px; }
     .persona-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
-    .persona-tag {
-      padding: 3px 9px;
-      background: #f4f4f5;
-      color: #52525b;
-      font-size: 0.75rem; font-weight: 500;
-      border-radius: 6px;
-    }
-    .persona-tag.income {
-      background: rgba(99,102,241,0.08);
-      color: #4f46e5;
-    }
+    .persona-tag { padding: 3px 9px; background: #f4f4f5; color: #52525b; font-size: 0.75rem; font-weight: 500; border-radius: 6px; }
+    .persona-tag.income { background: rgba(99,102,241,0.08); color: #4f46e5; }
     .persona-section { margin-top: 14px; }
     .persona-section h4 {
       font-size: 0.6875rem; font-weight: 600;
@@ -303,7 +311,6 @@
       color: #3f3f46; font-style: italic;
     }
 
-    /* CTA after results */
     .post-results-cta {
       max-width: 640px; margin: 0 auto; text-align: center;
       padding: 36px 32px;
@@ -320,13 +327,11 @@
       border: 1px solid rgba(255,255,255,0.25);
       border-radius: 10px;
       font-size: 0.9375rem; font-weight: 600; font-family: inherit;
-      cursor: pointer;
-      transition: all 0.18s;
-      text-decoration: none;
+      cursor: pointer; transition: all 0.18s; text-decoration: none;
     }
     .btn-ghost:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.45); color: #fff; }
 
-    /* Footer (matches index.html shape) */
+    /* Footer */
     footer { background: #0a0a0a; color: rgba(255,255,255,0.55); padding: 56px 0 28px; }
     footer .footer-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 30px; margin-bottom: 28px; flex-wrap: wrap; }
     footer h2 { color: #fff; font-size: 1.5rem; font-weight: 700; margin: 0 0 8px; letter-spacing: -0.03em; }
@@ -354,9 +359,6 @@
   </nav>
 
   <main>
-    <!-- ═══════════════════════════════════════
-         HERO + FORM
-    ═══════════════════════════════════════ -->
     <section class="hero" aria-labelledby="form-h1">
       <div class="container">
         <div class="hero-content">
@@ -367,24 +369,13 @@
             Tell us your audience and we'll show you what a research panel actually looks like.
           </p>
 
-          <form class="form-card" id="lead-form" novalidate>
-            <div class="form-error" id="form-error" role="alert"></div>
+          <!-- STAGE 1 — audience + captcha -->
+          <form class="form-card" id="stage1-form" novalidate>
+            <p class="step-label">Step 1 of 2</p>
+            <h2>Describe your audience</h2>
+            <p class="form-intro">Pick a Southeast Asian market and describe the consumers you want to study. We'll generate a panel of 5 in about 30 seconds.</p>
 
-            <div class="field-row field">
-              <div>
-                <label for="name">Your name</label>
-                <input type="text" id="name" name="name" autocomplete="name" required maxlength="255" />
-              </div>
-              <div>
-                <label for="company">Company</label>
-                <input type="text" id="company" name="company" autocomplete="organization" required maxlength="255" />
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="email">Work email</label>
-              <input type="email" id="email" name="email" autocomplete="email" required maxlength="255" />
-            </div>
+            <div class="form-error" id="stage1-error" role="alert"></div>
 
             <div class="field">
               <label for="country">Target market</label>
@@ -407,16 +398,45 @@
               ></textarea>
             </div>
 
-            <!-- Cloudflare Turnstile widget. Site key is the production key
-                 registered for www.temujintechnologies.com (safe to commit —
-                 site keys are public; the secret stays in Render env as
-                 TURNSTILE_SECRET_KEY). Cloudflare's "always passes" test key
-                 (1x00000000000000000000AA) and "always fails" key
-                 (1x00000000000000000000FF) are available if you ever need
-                 to test the success / rejection paths without going through
-                 a real challenge. -->
             <div class="turnstile-wrap">
               <div class="cf-turnstile" data-sitekey="0x4AAAAAADR0XTwT2rfl3JZp"></div>
+            </div>
+
+            <button type="submit" class="btn-primary lg" id="stage1-btn">
+              <span id="stage1-label">Generate 5 personas</span>
+            </button>
+
+            <p class="privacy-note">
+              Free preview, no account needed. We'll ask for your work email once your personas are ready so we can send you the permalink. See our
+              <a href="/privacy" target="_blank" rel="noopener">privacy policy</a>.
+            </p>
+          </form>
+
+          <!-- STAGE 2 — name + email gate before reveal -->
+          <form class="form-card" id="stage2-form" novalidate style="display: none;">
+            <p class="step-label">Step 2 of 2</p>
+            <div class="ready-pill" id="ready-pill">Your panel is ready</div>
+            <h2>Where should we send your panel?</h2>
+            <p class="form-intro">Drop your work email and we'll reveal the 5 personas. We'll also send you the permalink so you can come back to them.</p>
+
+            <div class="form-error" id="stage2-error" role="alert"></div>
+
+            <div class="field-row field">
+              <div>
+                <label for="name">Your name</label>
+                <input type="text" id="name" name="name" autocomplete="name" required maxlength="255" />
+              </div>
+              <div>
+                <label for="company">Company</label>
+                <input type="text" id="company" name="company" autocomplete="organization" required maxlength="255" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="email">Work email</label>
+              <input type="email" id="email" name="email" autocomplete="email" required maxlength="255"
+                placeholder="you@yourcompany.com" />
+              <p class="privacy-note" style="margin-top:6px;">Work email only — Gmail, Yahoo, and other personal addresses can't access the free demo.</p>
             </div>
 
             <label class="consent">
@@ -427,22 +447,15 @@
               </span>
             </label>
 
-            <button type="submit" class="btn-primary lg" id="submit-btn">
-              <span id="submit-label">Generate 5 personas</span>
+            <button type="submit" class="btn-primary lg" id="stage2-btn">
+              <span id="stage2-label">Reveal my 5 personas</span>
             </button>
-
-            <p class="privacy-note">
-              We'll use your email to share your generated personas and follow up about Boses.
-              No spam. Permalink to your results is shareable.
-            </p>
           </form>
         </div>
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════
-         RESULTS — hidden until form submit succeeds
-    ═══════════════════════════════════════ -->
+    <!-- RESULTS — hidden until stage 2 succeeds -->
     <section class="results" id="results" aria-live="polite">
       <div class="container">
         <div class="results-header">
@@ -451,9 +464,7 @@
           <p>Bookmark this page — your permalink is at the top of the address bar.</p>
         </div>
 
-        <div class="persona-grid" id="persona-grid">
-          <!-- persona-card elements are injected by JS -->
-        </div>
+        <div class="persona-grid" id="persona-grid"></div>
 
         <div class="post-results-cta">
           <h3>Want to actually run research with personas like these?</h3>
@@ -485,9 +496,8 @@
 
   <script>
     // ═══════════════════════════════════════════════════════════════════
-    // API URL — switches between staging and prod based on env. The static
-    // site has no build step, so we sniff the hostname instead. Update
-    // here if the API hostnames change.
+    // API URL — sniffed from hostname so localhost / staging / prod all
+    // route correctly without a build step.
     // ═══════════════════════════════════════════════════════════════════
     const API_BASE = (() => {
       const h = window.location.hostname;
@@ -496,30 +506,62 @@
       return 'https://api.temujintechnologies.com/api/v1';
     })();
 
-    const form = document.getElementById('lead-form');
-    const submitBtn = document.getElementById('submit-btn');
-    const submitLabel = document.getElementById('submit-label');
-    const errorBox = document.getElementById('form-error');
+    // ═══════════════════════════════════════════════════════════════════
+    // Element refs
+    // ═══════════════════════════════════════════════════════════════════
+    const stage1Form = document.getElementById('stage1-form');
+    const stage1Btn = document.getElementById('stage1-btn');
+    const stage1Label = document.getElementById('stage1-label');
+    const stage1Error = document.getElementById('stage1-error');
+
+    const stage2Form = document.getElementById('stage2-form');
+    const stage2Btn = document.getElementById('stage2-btn');
+    const stage2Label = document.getElementById('stage2-label');
+    const stage2Error = document.getElementById('stage2-error');
+    const readyPill = document.getElementById('ready-pill');
+
     const resultsSection = document.getElementById('results');
     const personaGrid = document.getElementById('persona-grid');
     const regenerateBtn = document.getElementById('regenerate-btn');
 
-    function showError(message) {
-      errorBox.textContent = message;
-      errorBox.classList.add('visible');
-      errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // State carried between stages
+    let stage1Ticket = null;
+    let stage1Country = null;  // for analytics
+    let preGeneratedPersonas = null;  // backfilled when /complete returns
+
+    // ═══════════════════════════════════════════════════════════════════
+    // Helpers
+    // ═══════════════════════════════════════════════════════════════════
+    function showError(box, message) {
+      box.textContent = message;
+      box.classList.add('visible');
+      box.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-    function clearError() {
-      errorBox.textContent = '';
-      errorBox.classList.remove('visible');
+    function clearError(box) {
+      box.textContent = '';
+      box.classList.remove('visible');
     }
-    function setLoading(loading) {
-      submitBtn.disabled = loading;
-      if (loading) {
-        submitLabel.innerHTML = '<span class="spinner"></span>Generating your panel…';
-      } else {
-        submitLabel.textContent = 'Generate 5 personas';
-      }
+    function setStage1Loading(loading) {
+      stage1Btn.disabled = loading;
+      stage1Label.innerHTML = loading
+        ? '<span class="spinner"></span>Preparing…'
+        : 'Generate 5 personas';
+    }
+    function setStage2Loading(loading) {
+      stage2Btn.disabled = loading;
+      stage2Label.innerHTML = loading
+        ? '<span class="spinner"></span>Generating your panel…'
+        : 'Reveal my 5 personas';
+    }
+
+    function escapeHtml(s) {
+      if (s == null) return '';
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
 
     function renderPersonas(personas) {
@@ -555,22 +597,7 @@
       }
     }
 
-    // Tiny HTML-escape — defends against persona-content injecting markup.
-    // We control the generator prompt so this is paranoia, not active defense.
-    function escapeHtml(s) {
-      if (s == null) return '';
-      return String(s)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
     function getTurnstileToken() {
-      // Cloudflare Turnstile renders the widget inside .cf-turnstile and
-      // exposes a global `turnstile` object with getResponse(). When the
-      // widget hasn't been completed, getResponse returns "" (string).
       try {
         if (window.turnstile && typeof window.turnstile.getResponse === 'function') {
           return window.turnstile.getResponse() || '';
@@ -578,69 +605,146 @@
       } catch (e) {}
       return '';
     }
-
     function resetTurnstile() {
       try { window.turnstile && window.turnstile.reset && window.turnstile.reset(); } catch (e) {}
     }
 
-    form.addEventListener('submit', async (e) => {
+    // ═══════════════════════════════════════════════════════════════════
+    // STAGE 1 submit: country + audience + captcha → ticket
+    // ═══════════════════════════════════════════════════════════════════
+    stage1Form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      clearError();
+      clearError(stage1Error);
 
       const data = {
-        name: document.getElementById('name').value.trim(),
-        company: document.getElementById('company').value.trim(),
-        email: document.getElementById('email').value.trim(),
         country: document.getElementById('country').value,
         audience_description: document.getElementById('audience_description').value.trim(),
         turnstile_token: getTurnstileToken(),
       };
 
-      // Client-side checks before round-trip (mirrors backend schema bounds)
-      if (!data.name || !data.company || !data.email || !data.country || !data.audience_description) {
-        showError('Please complete all fields.');
-        return;
-      }
-      if (data.audience_description.length < 20) {
-        showError('Please describe the audience in a bit more detail (at least 20 characters).');
+      if (!data.country) { showError(stage1Error, 'Please choose a target market.'); return; }
+      if (!data.audience_description || data.audience_description.length < 20) {
+        showError(stage1Error, 'Please describe the audience in a bit more detail (at least 20 characters).');
         return;
       }
       if (!data.turnstile_token) {
-        showError('Please complete the captcha above.');
-        return;
-      }
-      if (!document.getElementById('consent').checked) {
-        showError('Please confirm you agree to be contacted.');
+        showError(stage1Error, 'Please complete the captcha above.');
         return;
       }
 
-      setLoading(true);
+      setStage1Loading(true);
       try {
-        const resp = await fetch(`${API_BASE}/public/lead-personas`, {
+        const resp = await fetch(`${API_BASE}/public/lead-personas/start`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
         });
         if (!resp.ok) {
           const body = await resp.json().catch(() => ({}));
-          // Map common backend status codes to user-friendly messages
-          if (resp.status === 400) showError(body.detail || 'Captcha verification failed. Please try the captcha again.');
-          else if (resp.status === 422) showError('Some of your inputs are invalid. Please double-check the form.');
-          else if (resp.status === 429) showError('You\'ve generated too many panels recently from this network. Please try again later.');
-          else if (resp.status === 502) showError('Our generator had a hiccup. Please try again in a moment.');
-          else if (resp.status === 503) showError(body.detail || 'We\'re at capacity for free demos today. Please try again tomorrow or book a call.');
-          else showError('Something went wrong. Please try again.');
+          if (resp.status === 400) showError(stage1Error, body.detail || 'Captcha verification failed. Please try the captcha again.');
+          else if (resp.status === 422) showError(stage1Error, 'Some of your inputs are invalid. Please double-check the form.');
+          else if (resp.status === 429) showError(stage1Error, 'Too many attempts from this network. Please try again later.');
+          else showError(stage1Error, 'Something went wrong. Please try again.');
           resetTurnstile();
+          return;
+        }
+        const result = await resp.json();
+        stage1Ticket = result.ticket;
+        stage1Country = data.country;
+
+        // Reveal stage 2, hide stage 1
+        stage1Form.style.display = 'none';
+        stage2Form.style.display = '';
+        stage2Form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Auto-focus the name field for momentum
+        setTimeout(() => document.getElementById('name').focus(), 200);
+
+        // Analytics: stage-1 fired
+        try {
+          gtag('event', 'lead_started', { country: data.country });
+        } catch (e) {}
+      } catch (err) {
+        console.error('stage 1 submit failed', err);
+        showError(stage1Error, 'Network error. Please check your connection and try again.');
+        resetTurnstile();
+      } finally {
+        setStage1Loading(false);
+      }
+    });
+
+    // ═══════════════════════════════════════════════════════════════════
+    // STAGE 2 submit: ticket + name + email → personas
+    // ═══════════════════════════════════════════════════════════════════
+    stage2Form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearError(stage2Error);
+
+      if (!stage1Ticket) {
+        showError(stage2Error, 'Your session expired. Please start over.');
+        // Reset flow
+        setTimeout(() => {
+          stage2Form.style.display = 'none';
+          stage1Form.style.display = '';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          resetTurnstile();
+        }, 2000);
+        return;
+      }
+
+      const data = {
+        ticket: stage1Ticket,
+        name: document.getElementById('name').value.trim(),
+        company: document.getElementById('company').value.trim(),
+        email: document.getElementById('email').value.trim(),
+      };
+
+      if (!data.name || !data.company || !data.email) {
+        showError(stage2Error, 'Please complete all fields.');
+        return;
+      }
+      if (!document.getElementById('consent').checked) {
+        showError(stage2Error, 'Please confirm you agree to be contacted.');
+        return;
+      }
+
+      setStage2Loading(true);
+      try {
+        const resp = await fetch(`${API_BASE}/public/lead-personas/complete`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!resp.ok) {
+          const body = await resp.json().catch(() => ({}));
+          if (resp.status === 400) {
+            // 400 can be: free-email, disposable-email, expired ticket
+            showError(stage2Error, body.detail || 'Please check your inputs and try again.');
+            // If ticket expired, send user back to stage 1
+            if (body.detail && /session expired/i.test(body.detail)) {
+              setTimeout(() => {
+                stage1Ticket = null;
+                stage2Form.style.display = 'none';
+                stage1Form.style.display = '';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                resetTurnstile();
+              }, 2500);
+            }
+          } else if (resp.status === 422) showError(stage2Error, 'Some of your inputs are invalid.');
+          else if (resp.status === 429) showError(stage2Error, 'Too many attempts. Please try again later.');
+          else if (resp.status === 502) showError(stage2Error, 'Our generator had a hiccup. Please try again.');
+          else if (resp.status === 503) showError(stage2Error, body.detail || 'We\'re at capacity for free demos today. Please try again tomorrow.');
+          else showError(stage2Error, 'Something went wrong. Please try again.');
           return;
         }
 
         const result = await resp.json();
         renderPersonas(result.personas || []);
 
-        // Fire analytics — visible in GA4 Realtime + Events
+        // GA4 — capture conversion
         try {
           gtag('event', 'lead_captured', {
-            country: data.country,
+            country: stage1Country || 'unknown',
             company_domain: (data.email.split('@')[1] || '').toLowerCase(),
           });
         } catch (e) {}
@@ -651,24 +755,31 @@
           window.history.replaceState({}, '', newURL);
         } catch (e) {}
 
-        // Reveal results, hide form, scroll
-        document.getElementById('lead-form').style.display = 'none';
+        // Reveal results, hide both forms, scroll
+        stage1Form.style.display = 'none';
+        stage2Form.style.display = 'none';
         resultsSection.classList.add('visible');
         resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } catch (err) {
-        console.error('lead-gen submit failed', err);
-        showError('Network error. Please check your connection and try again.');
-        resetTurnstile();
+        console.error('stage 2 submit failed', err);
+        showError(stage2Error, 'Network error. Please check your connection and try again.');
       } finally {
-        setLoading(false);
+        setStage2Loading(false);
       }
     });
 
-    // "Try another audience" — show the form again, reset URL
+    // "Try another audience" — full reset
     regenerateBtn.addEventListener('click', () => {
       try { window.history.replaceState({}, '', window.location.pathname); } catch (e) {}
+      stage1Ticket = null;
+      stage1Country = null;
+      preGeneratedPersonas = null;
       resultsSection.classList.remove('visible');
-      document.getElementById('lead-form').style.display = '';
+      stage2Form.style.display = 'none';
+      stage1Form.style.display = '';
+      // Reset form values
+      stage1Form.reset();
+      stage2Form.reset();
       resetTurnstile();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
@@ -683,7 +794,8 @@
       if (!token) return;
 
       // Optimistic: hide the form, show "Loading…" in the results section
-      document.getElementById('lead-form').style.display = 'none';
+      stage1Form.style.display = 'none';
+      stage2Form.style.display = 'none';
       resultsSection.classList.add('visible');
       personaGrid.innerHTML = '<p style="text-align:center;color:#71717a;font-size:0.9375rem;">Loading your personas…</p>';
 
@@ -691,10 +803,9 @@
         const resp = await fetch(`${API_BASE}/public/lead-personas/${encodeURIComponent(token)}`);
         if (!resp.ok) {
           personaGrid.innerHTML = '<p style="text-align:center;color:#b91c1c;font-size:0.9375rem;">That link is no longer available. Generate a new panel below.</p>';
-          // Show the form again after a beat
           setTimeout(() => {
             resultsSection.classList.remove('visible');
-            document.getElementById('lead-form').style.display = '';
+            stage1Form.style.display = '';
             try { window.history.replaceState({}, '', window.location.pathname); } catch (e) {}
           }, 2500);
           return;
