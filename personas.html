@@ -167,7 +167,23 @@
     .form-card textarea { resize: vertical; min-height: 100px; line-height: 1.55; }
     .form-card .field { margin-bottom: 18px; }
     .form-card .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    @media (max-width: 480px) { .form-card .field-row { grid-template-columns: 1fr; } }
+    @media (max-width: 480px) {
+      .form-card .field-row { grid-template-columns: 1fr; }
+      /* Reclaim horizontal space on phones so the Turnstile widget (min
+         300px wide, even in "flexible" mode) doesn't overflow the form
+         card. Math on a 360px Android viewport (the common phone floor
+         we actually target):
+           360 - container 16×2 - form-card 14×2 = 300px usable
+         which exactly matches Turnstile's flexible-mode minimum, so the
+         widget renders at the container width with zero clip. Smaller
+         viewports (iPhone SE @ 320px) still overflow by a few pixels —
+         a rounding edge case not worth the JS to detect-and-swap to
+         the compact widget variant. Vertical padding goes 32 → 22 too,
+         which tightens the card visually and feels appropriate on phones
+         where vertical real estate is the more precious axis. */
+      .form-card { padding: 22px 14px; }
+      .container { padding: 0 16px; }
+    }
     .form-card .consent {
       display: flex; align-items: flex-start; gap: 10px;
       font-size: 0.8125rem; color: #52525b; margin: 8px 0 18px;
@@ -575,7 +591,7 @@
             </div>
 
             <div class="turnstile-wrap">
-              <div class="cf-turnstile" data-sitekey="0x4AAAAAADR0XTwT2rfl3JZp"></div>
+              <div class="cf-turnstile" data-sitekey="0x4AAAAAADR0XTwT2rfl3JZp" data-size="flexible"></div>
             </div>
 
             <button type="submit" class="btn-primary lg" id="stage1-btn">
