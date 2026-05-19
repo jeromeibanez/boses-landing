@@ -252,6 +252,14 @@
       .form-card { padding: 22px 14px; }
       .container { padding: 0 16px; }
     }
+    /* Privacy-policy link now lives outside the consent <label> so
+       (a) clicking the link doesn't toggle the checkbox and (b) the
+       link gets its own clean tab stop. */
+    .form-card .consent-link-note {
+      font-size: 0.75rem; color: #71717a; line-height: 1.55;
+      margin: 6px 0 0 26px;
+    }
+    .form-card .consent-link-note a { color: #4f46e5; text-decoration: underline; }
     .form-card .consent {
       display: flex; align-items: flex-start; gap: 10px;
       font-size: 0.8125rem; color: #52525b; margin: 8px 0 18px;
@@ -645,6 +653,14 @@
     .footer-links a:hover { color: #fff; }
     .footer-copy { font-size: 0.8125rem; color: rgba(255,255,255,0.35); margin: 0; padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.06); }
 
+    /* Screen-reader-only utility — used by #stage-announcer for the
+       aria-live stage-transition announcements. */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
     @media (max-width: 768px) {
       .hero { padding: 28px 0 24px; }
       .form-card { padding: 24px 22px; }
@@ -746,11 +762,9 @@
 
             <label class="consent">
               <input type="checkbox" id="consent" required />
-              <span>
-                I agree Boses may contact me about scheduling a call.
-                See our <a href="/privacy" target="_blank" rel="noopener">privacy policy</a>.
-              </span>
+              <span>I agree Boses may contact me about scheduling a call.</span>
             </label>
+            <p class="consent-link-note">See our <a href="/privacy" target="_blank" rel="noopener">privacy policy</a>.</p>
 
             <button type="submit" class="btn-primary lg" id="stage2-btn">
               <span id="stage2-label">Generate my panel</span>
@@ -760,6 +774,10 @@
         </div>
       </div>
     </section>
+
+    <!-- Off-screen aria-live region for stage transitions. Sighted
+         users see the form swap; screen-reader users hear the message. -->
+    <div class="sr-only" id="stage-announcer" aria-live="polite" aria-atomic="true"></div>
 
     <!-- GENERATION LOADER — shown while /complete is in flight.
          Replaces the form visually so the user sees real movement
@@ -1158,6 +1176,14 @@
     // ═══════════════════════════════════════════════════════════════════
     // STAGE 1 submit: country + audience + captcha → ticket
     // ═══════════════════════════════════════════════════════════════════
+    // P-12: clear stage-1 error as soon as the user starts correcting
+    // it. Without this, a user who fixes their input still sees the
+    // red banner until they resubmit — looks broken.
+    stage1Form.addEventListener('input', () => clearError(stage1Error));
+    stage1Form.addEventListener('change', () => clearError(stage1Error));
+    stage2Form.addEventListener('input', () => clearError(stage2Error));
+    stage2Form.addEventListener('change', () => clearError(stage2Error));
+
     stage1Form.addEventListener('submit', async (e) => {
       e.preventDefault();
       clearError(stage1Error);
@@ -1205,6 +1231,14 @@
 
         // Auto-focus the name field for momentum
         setTimeout(() => document.getElementById('name').focus(), 200);
+
+        // P-10: announce the stage transition to screen-reader users.
+        // The visual swap is obvious for sighted users; for assistive
+        // tech, the page silently re-layouts without telling them.
+        try {
+          const announcer = document.getElementById('stage-announcer');
+          if (announcer) announcer.textContent = 'Step 2 of 2. Please enter your name, company, and work email.';
+        } catch (e) {}
 
         // Analytics: stage-1 fired
         try {
@@ -1432,15 +1466,28 @@
       try {
         const resp = await fetch(`${API_BASE}/public/lead-personas/${encodeURIComponent(token)}`);
         if (!resp.ok) {
-          personaGrid.innerHTML = '<p style="text-align:center;color:#b91c1c;font-size:0.9375rem;">That link is no longer available. Generate a new panel below.</p>';
-          setTimeout(() => {
-            resultsSection.classList.remove('visible');
-            // Token was bad — bring the hero + stage-1 form back so the
-            // user can generate fresh.
-            heroSection.style.display = '';
-            stage1Form.style.display = '';
-            try { window.history.replaceState({}, '', window.location.pathname); } catch (e) {}
-          }, 2500);
+          // P-9: full-card error with an explicit "Generate new panel"
+          // CTA instead of auto-dismissing after 2.5s. On a 720px
+          // mobile viewport the grid is below the fold; auto-dismiss
+          // means the user never sees the error and the page just
+          // relayouts silently — feels broken.
+          personaGrid.innerHTML = `
+            <div style="max-width:520px;margin:0 auto;padding:32px;background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.08);text-align:center;">
+              <h3 style="font-size:1.25rem;margin:0 0 12px;color:#18181b;">That link expired</h3>
+              <p style="color:#52525b;margin:0 0 20px;line-height:1.55;">Permalinks are stored permanently — but this one isn't reachable, possibly removed. Generate a new panel to keep going.</p>
+              <button type="button" class="btn-primary" id="permalink-restart-btn">Generate a new panel</button>
+            </div>
+          `;
+          const restartBtn = document.getElementById('permalink-restart-btn');
+          if (restartBtn) {
+            restartBtn.addEventListener('click', () => {
+              resultsSection.classList.remove('visible');
+              heroSection.style.display = '';
+              stage1Form.style.display = '';
+              try { window.history.replaceState({}, '', window.location.pathname); } catch (e) {}
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+          }
           return;
         }
         const result = await resp.json();
