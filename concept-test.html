@@ -701,12 +701,13 @@
               <label for="research_question">Research Question</label>
               <textarea id="research_question" name="research_question" rows="3"
                 minlength="10" maxlength="500"
-                placeholder="e.g. What do you think of this packaging? Would you buy it at PHP 25? What stands out to you?"
+                placeholder="e.g. What's your first impression of this packaging?"
               ></textarea>
+              <p class="hint" style="margin-top:6px;">Tip: ask one clear question per test. Stacking three questions blurs the reactions.</p>
             </div>
 
             <div class="field">
-              <label>Upload a brief — ad creative, packaging mockup, or PDF. This is what the personas will react to.</label>
+              <label>Upload a brief — your packaging mockup, ad creative, product photo, or a PDF one-pager. This is the stimulus the personas will react to.</label>
               <div class="file-input-wrap" id="file-input-wrap">
                 <input id="concept_file" name="concept_file" type="file"
                   accept="image/png,image/jpeg,image/webp,application/pdf" />
@@ -728,10 +729,6 @@
               <span id="stage1-label">Run the concept test</span>
             </button>
 
-            <p class="privacy-note">
-              We use your work email to send you the result permalink and to follow up about Boses. No spam.
-              See our <a href="/privacy" target="_blank" rel="noopener">privacy policy</a>.
-            </p>
           </form>
 
           <!-- STAGE 2 — name + work email + consent -->
@@ -750,7 +747,8 @@
 
             <div class="field">
               <label for="company">Company</label>
-              <input id="company" name="company" type="text" required autocomplete="organization" />
+              <input id="company" name="company" type="text" required autocomplete="organization"
+                placeholder="e.g., Acme Corporation" />
             </div>
 
             <div class="field">
@@ -764,14 +762,15 @@
             <label class="consent">
               <input type="checkbox" id="consent" required />
               <span>
-                I agree to be contacted by Boses about this demo and related product updates.
+                I agree Boses may contact me about scheduling a call.
                 See our <a href="/privacy" target="_blank" rel="noopener">privacy policy</a>.
               </span>
             </label>
 
             <button type="submit" class="btn-primary lg" id="stage2-btn">
-              <span id="stage2-label">Reveal my panel</span>
+              <span id="stage2-label">Generate my panel</span>
             </button>
+            <p class="hint" style="text-align:center;margin-top:8px;">Takes 30–60 seconds. We'll send you the permalink + one short follow-up — no spam.</p>
           </form>
         </div>
       </div>
@@ -822,8 +821,8 @@
 
         <!-- Post-results CTA -->
         <div class="post-results-cta">
-          <h3>Want this depth on your real campaign?</h3>
-          <p>Boses runs concept tests, IDIs, surveys, focus groups, and conjoint analyses on AI panels — grounded in real Southeast Asian behavioral data. Real research in hours, not months.</p>
+          <h3>See this on your real campaign</h3>
+          <p>Book a 30-min call to run concept tests on larger panels, segment deep-dives, IDIs, surveys, focus groups, or conjoint analyses — all grounded in real Southeast Asian behavioral data. Real research in hours, not months.</p>
           <div class="cta-buttons">
             <a href="https://calendar.app.google/2BmDBsSZRwTB783D8" class="btn-primary" target="_blank" rel="noopener" id="results-book-call-cta">Book a 30-min call</a>
             <button type="button" class="btn-copy-link" id="copy-link-btn" aria-label="Copy permalink to clipboard">
@@ -952,7 +951,7 @@
       stage2Btn.disabled = loading;
       stage2Label.innerHTML = loading
         ? '<span class="spinner"></span>Generating…'
-        : 'Reveal my panel';
+        : 'Generate my panel';
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -1016,11 +1015,35 @@
     // ═══════════════════════════════════════════════════════════════════
     // Loader theatre — cycling status copy + progress bar
     // ═══════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════
+    // CT-7: dynamic audience placeholder per selected country.
+    // Prospects who pick Singapore shouldn't see a PH "baon" example
+    // first — it doesn't anchor the right kind of detail. We swap when
+    // the country dropdown changes; default copy stays for empty/PH.
+    // ═══════════════════════════════════════════════════════════════════
+    const audienceEl = document.getElementById('audience_description');
+    const countryEl = document.getElementById('country');
+    const AUDIENCE_PLACEHOLDERS = {
+      PH: 'e.g. Working moms aged 30-45 in Metro Manila who buy snacks for kids\' school baon.',
+      ID: 'e.g. Young professionals aged 25-35 in Jakarta who use Gojek for daily commute + lunch delivery.',
+      VN: 'e.g. University students aged 18-24 in Ho Chi Minh City who pay via MoMo at coffee shops.',
+      TH: 'e.g. Bangkok office workers aged 28-40 who shop on LINE Shopping and 7-Eleven during commute.',
+      MY: 'e.g. Klang Valley parents aged 32-45 buying halal snacks at AEON and Tesco.',
+      SG: 'e.g. HDB-flat-dwelling families in Tampines aged 30-45 buying groceries at FairPrice and Cold Storage.',
+    };
+    if (countryEl && audienceEl) {
+      countryEl.addEventListener('change', () => {
+        const next = AUDIENCE_PLACEHOLDERS[countryEl.value];
+        if (next) audienceEl.placeholder = next;
+      });
+    }
+
     const LOADER_STAGES = [
       { at: 0,    text: 'Generating 3 personas from your audience description…' },
-      { at: 0.30, text: 'Personas drafted. Showing them your concept…' },
-      { at: 0.55, text: 'Collecting per-persona reactions…' },
-      { at: 0.80, text: 'Synthesizing the panel-level analysis…' },
+      { at: 0.25, text: 'Personas drafted. Showing them your brief…' },
+      { at: 0.45, text: 'Collecting per-persona reactions…' },
+      { at: 0.65, text: 'Synthesizing the panel-level analysis…' },
+      { at: 0.85, text: 'Pulling together the panel verdict…' },
       { at: 0.95, text: 'Almost there — formatting your report…' },
     ];
     let loaderTimer = null;

@@ -595,9 +595,22 @@
       margin: 0;
     }
 
+    /* "Why this persona works" callout — moved to position 2 (after the
+       day-in-life quote) and tinted so it reads as a high-confidence
+       conclusion, not a footnote. Indigo accent matches the brand. */
+    .persona-insight {
+      background: #f5f3ff;
+      border-left: 3px solid #818cf8;
+      padding: 12px 14px;
+      border-radius: 8px;
+    }
+    .persona-insight .persona-section-label {
+      color: #4338ca;
+      margin-bottom: 6px;
+    }
     .persona-insight p {
-      font-size: 0.8438rem; line-height: 1.55;
-      color: #52525b;
+      font-size: 0.875rem; line-height: 1.55;
+      color: #312e81;
       margin: 0;
     }
 
@@ -706,7 +719,7 @@
             <p class="step-label">Step 2 of 2</p>
             <div class="ready-pill" id="ready-pill">Your panel is ready</div>
             <h2>Where should we send your panel?</h2>
-            <p class="form-intro">Drop your work email and we'll reveal the 3 personas. We'll also send you the permalink so you can come back to them.</p>
+            <p class="form-intro">Drop your work email and we'll reveal the 3 personas. We'll also send you the permalink and one short follow-up — no spam, unsubscribe anytime.</p>
 
             <div class="form-error" id="stage2-error" role="alert"></div>
 
@@ -717,7 +730,8 @@
               </div>
               <div>
                 <label for="company">Company</label>
-                <input type="text" id="company" name="company" autocomplete="organization" required maxlength="255" />
+                <input type="text" id="company" name="company" autocomplete="organization" required maxlength="255"
+                  placeholder="e.g., Acme Corporation" />
               </div>
             </div>
 
@@ -733,14 +747,15 @@
             <label class="consent">
               <input type="checkbox" id="consent" required />
               <span>
-                I agree to be contacted by Boses about my submission.
+                I agree Boses may contact me about scheduling a call.
                 See our <a href="/privacy" target="_blank" rel="noopener">privacy policy</a>.
               </span>
             </label>
 
             <button type="submit" class="btn-primary lg" id="stage2-btn">
-              <span id="stage2-label">Reveal my 3 personas</span>
+              <span id="stage2-label">Generate my panel</span>
             </button>
+            <p class="privacy-note" style="text-align:center;margin-top:8px;">Takes 20–30 seconds.</p>
           </form>
         </div>
       </div>
@@ -920,7 +935,7 @@
       stage2Btn.disabled = loading;
       stage2Label.innerHTML = loading
         ? '<span class="spinner"></span>Generating your panel…'
-        : 'Reveal my 3 personas';
+        : 'Generate my panel';
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -1113,15 +1128,15 @@
             <div class="persona-quote-label">A day in their life</div>
             <blockquote>${escapeHtml(p.day_in_life)}</blockquote>
           </div>
+          <div class="persona-section persona-insight">
+            <div class="persona-section-label">Why this persona works</div>
+            <p>${escapeHtml(p.behavioral_insight)}</p>
+          </div>
           ${painAspRow}
           ${digitalBuyingRow}
           <div class="persona-section">
             <div class="persona-section-label">What they value</div>
             <div class="persona-value-chips">${valueChips}</div>
-          </div>
-          <div class="persona-section persona-insight">
-            <div class="persona-section-label">Researcher's note</div>
-            <p>${escapeHtml(p.behavioral_insight)}</p>
           </div>
         `;
         personaGrid.appendChild(card);
