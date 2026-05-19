@@ -275,6 +275,35 @@
       margin: 14px 0 0;
     }
     .form-card .privacy-note a { color: #4f46e5; text-decoration: underline; }
+    /* Email-gate visual notice — promoted from a small grey helper so
+       prospects on Gmail/Yahoo don't get caught at submit-time after
+       filling 4 fields. Amber left-border + light background reads as
+       "this is load-bearing" rather than "decorative." */
+    .form-card .email-gate-notice {
+      margin: 8px 0 4px;
+      padding: 10px 12px;
+      border-left: 3px solid #f59e0b;
+      background: #fffbeb;
+      border-radius: 6px;
+      color: #78350f;
+      font-size: 0.8125rem;
+      line-height: 1.45;
+    }
+    .form-card .email-gate-notice strong { color: #78350f; font-weight: 700; }
+    /* Copy-link button on results page — uses ghost-button shape but a
+       little wider so the icon + label both fit comfortably. */
+    .btn-copy-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.92);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 12px 18px; border-radius: 10px;
+      font-size: 0.9375rem; font-weight: 600;
+      cursor: pointer; transition: background 0.15s ease;
+    }
+    .btn-copy-link:hover { background: rgba(255,255,255,0.12); }
+    .btn-copy-link svg { width: 14px; height: 14px; }
+    .btn-copy-link.copied { background: rgba(16,185,129,0.18); border-color: rgba(16,185,129,0.4); }
 
     /* Stage-2 specific: "your panel is being generated" hint */
     .ready-pill {
@@ -633,7 +662,7 @@
           <form class="form-card" id="stage1-form" novalidate>
             <p class="step-label">Step 1 of 2</p>
             <h2>Describe your audience</h2>
-            <p class="form-intro">Pick a Southeast Asian market and describe the consumers you want to study. We'll generate a panel of 3 detailed personas in 20–30 seconds.</p>
+            <p class="form-intro">Pick a Southeast Asian market and describe the consumers you want to study. We'll generate a panel of 3 detailed personas in under a minute.</p>
 
             <div class="form-error" id="stage1-error" role="alert"></div>
 
@@ -694,9 +723,11 @@
 
             <div class="field">
               <label for="email">Work email</label>
+              <p class="email-gate-notice">
+                <strong>Work email required.</strong> Gmail, Yahoo, Outlook, AOL, and other personal-mail providers can't access the free demo.
+              </p>
               <input type="email" id="email" name="email" autocomplete="email" required maxlength="255"
                 placeholder="you@yourcompany.com" />
-              <p class="privacy-note" style="margin-top:6px;">Work email only — Gmail, Yahoo, and other personal addresses can't access the free demo.</p>
             </div>
 
             <label class="consent">
@@ -749,6 +780,10 @@
           <p>Boses lets you run surveys, in-depth interviews, focus groups, and concept tests on AI panels grounded in real SEA behavioral data. Real results in hours, not months.</p>
           <div class="cta-buttons">
             <a href="https://calendar.app.google/2BmDBsSZRwTB783D8" class="btn-primary" target="_blank" rel="noopener" id="results-book-call-cta">Book a 30-min call</a>
+            <button type="button" class="btn-copy-link" id="copy-link-btn" aria-label="Copy permalink to clipboard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              <span id="copy-link-label">Copy link</span>
+            </button>
             <button type="button" class="btn-ghost" id="regenerate-btn">Try another audience</button>
           </div>
         </div>
@@ -1324,6 +1359,39 @@
         try {
           gtag('event', 'results_book_call', { country: stage1Country || 'unknown' });
         } catch (e) {}
+      });
+    }
+
+    // "Copy link" — one-click permalink share. The address bar already
+    // has the token, but on mobile selecting + copying it is fiddly.
+    // The button copies window.location.href + flashes "Copied!" for
+    // 1.6s so the user sees confirmation without a modal toast.
+    const copyLinkBtn = document.getElementById('copy-link-btn');
+    const copyLinkLabel = document.getElementById('copy-link-label');
+    if (copyLinkBtn && copyLinkLabel) {
+      copyLinkBtn.addEventListener('click', async () => {
+        const url = window.location.href;
+        let ok = false;
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(url);
+            ok = true;
+          } else {
+            // Fallback for older browsers / non-secure contexts.
+            const ta = document.createElement('textarea');
+            ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            ok = document.execCommand('copy');
+            document.body.removeChild(ta);
+          }
+        } catch (e) { ok = false; }
+        copyLinkLabel.textContent = ok ? 'Copied!' : 'Press ⌘+C';
+        copyLinkBtn.classList.add('copied');
+        setTimeout(() => {
+          copyLinkLabel.textContent = 'Copy link';
+          copyLinkBtn.classList.remove('copied');
+        }, 1600);
+        try { gtag('event', 'copy_permalink', { country: stage1Country || 'unknown' }); } catch (e) {}
       });
     }
 

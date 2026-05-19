@@ -312,6 +312,48 @@
       margin: 14px 0 0;
     }
     .form-card .privacy-note a { color: #4f46e5; text-decoration: underline; }
+    /* Email-gate visual notice — promoted from a small grey helper so
+       prospects on Gmail/Yahoo don't get caught at submit-time. See
+       personas.html for the design rationale; the styles match. */
+    .form-card .email-gate-notice {
+      margin: 8px 0 4px;
+      padding: 10px 12px;
+      border-left: 3px solid #f59e0b;
+      background: #fffbeb;
+      border-radius: 6px;
+      color: #78350f;
+      font-size: 0.8125rem;
+      line-height: 1.45;
+    }
+    .form-card .email-gate-notice strong { color: #78350f; font-weight: 700; }
+    /* File-too-large inline warning — fires on `change` event so the
+       user sees the problem at upload time, not at submit time after
+       filling 4 other fields. */
+    .file-size-warning {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-left: 3px solid #dc2626;
+      background: #fef2f2;
+      border-radius: 6px;
+      color: #991b1b;
+      font-size: 0.8125rem;
+      line-height: 1.45;
+      display: none;
+    }
+    .file-size-warning.visible { display: block; }
+    /* Copy-link button on results page (same shape as personas.html) */
+    .btn-copy-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.92);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 12px 18px; border-radius: 10px;
+      font-size: 0.9375rem; font-weight: 600;
+      cursor: pointer; transition: background 0.15s ease;
+    }
+    .btn-copy-link:hover { background: rgba(255,255,255,0.12); }
+    .btn-copy-link svg { width: 14px; height: 14px; }
+    .btn-copy-link.copied { background: rgba(16,185,129,0.18); border-color: rgba(16,185,129,0.4); }
 
     /* Stage-2-specific ready pill (reused verbatim from personas.html) */
     .ready-pill {
@@ -623,7 +665,7 @@
         <div class="hero-content">
           <h1 id="form-h1">See how <span class="accent">Southeast Asian consumers</span> react to your concept</h1>
           <p class="sub">
-            Paste a product idea or upload an ad / packaging mockup. Boses generates 3 AI personas from your target market and runs a real concept test — verbatim reactions plus an aggregate analysis, free, in 30 seconds.
+            Paste a product idea or upload an ad / packaging mockup. Boses generates 3 AI personas from your target market and runs a real concept test — verbatim reactions plus an aggregate analysis, free, in about a minute.
           </p>
 
           <!-- STAGE 1 — country + audience + concept + captcha -->
@@ -675,6 +717,7 @@
                 <img id="file-preview-img" alt="Concept preview" />
                 <div class="filename" id="file-preview-name"></div>
               </div>
+              <div class="file-size-warning" id="file-size-warning" role="alert"></div>
             </div>
 
             <div class="turnstile-wrap">
@@ -712,8 +755,10 @@
 
             <div class="field">
               <label for="email">Work email</label>
+              <p class="email-gate-notice">
+                <strong>Work email required.</strong> Gmail, Yahoo, Outlook, AOL, and other personal-mail providers can't access the free demo.
+              </p>
               <input id="email" name="email" type="email" required autocomplete="email" />
-              <p class="hint" style="margin-top:6px;">Work email only — Gmail, Yahoo, and other personal addresses can't access the free demo.</p>
             </div>
 
             <label class="consent">
@@ -781,6 +826,10 @@
           <p>Boses runs concept tests, IDIs, surveys, focus groups, and conjoint analyses on AI panels — grounded in real Southeast Asian behavioral data. Real research in hours, not months.</p>
           <div class="cta-buttons">
             <a href="https://calendar.app.google/2BmDBsSZRwTB783D8" class="btn-primary" target="_blank" rel="noopener" id="results-book-call-cta">Book a 30-min call</a>
+            <button type="button" class="btn-copy-link" id="copy-link-btn" aria-label="Copy permalink to clipboard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              <span id="copy-link-label">Copy link</span>
+            </button>
             <button type="button" class="btn-ghost" id="regenerate-btn">Try another concept</button>
           </div>
         </div>
@@ -923,12 +972,31 @@
     // ═══════════════════════════════════════════════════════════════════
     // File input UX — show preview thumbnail for images, filename for PDFs
     // ═══════════════════════════════════════════════════════════════════
+    const fileSizeWarning = document.getElementById('file-size-warning');
     fileInput.addEventListener('change', () => {
       const f = fileInput.files && fileInput.files[0];
+      // Clear any previous size warning whenever the user re-picks.
+      fileSizeWarning.classList.remove('visible');
+      fileSizeWarning.textContent = '';
       if (!f) {
         filePreview.classList.remove('visible');
         fileInputWrap.classList.remove('has-file');
         fileInputLabel.textContent = 'Click to choose a file';
+        return;
+      }
+      // Client-side size pre-check — fires at upload time so the user
+      // sees the 5 MB ceiling immediately, not after filling out the
+      // rest of the form and hitting submit. Server still enforces.
+      if (f.size > 5 * 1024 * 1024) {
+        const mb = (f.size / (1024 * 1024)).toFixed(1);
+        fileSizeWarning.textContent = `This file is ${mb} MB — please reduce to under 5 MB and re-upload.`;
+        fileSizeWarning.classList.add('visible');
+        // Clear the file so submit doesn't try to send it.
+        fileInput.value = '';
+        filePreview.classList.remove('visible');
+        fileInputWrap.classList.remove('has-file');
+        fileInputLabel.textContent = 'Click to choose a file';
+        try { gtag('event', 'ct_failed', { stage: 1, reason: 'file_too_large' }); } catch (e) {}
         return;
       }
       fileInputWrap.classList.add('has-file');
@@ -1319,6 +1387,37 @@
         try {
           gtag('event', 'ct_results_book_call', { country: stage1Country || 'unknown' });
         } catch (e) {}
+      });
+    }
+
+    // "Copy link" — one-click permalink share. Same shape as the
+    // personas.html implementation: writeText with execCommand
+    // fallback, flash "Copied!" for 1.6s, fire a GA event.
+    const copyLinkBtn = document.getElementById('copy-link-btn');
+    const copyLinkLabel = document.getElementById('copy-link-label');
+    if (copyLinkBtn && copyLinkLabel) {
+      copyLinkBtn.addEventListener('click', async () => {
+        const url = window.location.href;
+        let ok = false;
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(url);
+            ok = true;
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            ok = document.execCommand('copy');
+            document.body.removeChild(ta);
+          }
+        } catch (e) { ok = false; }
+        copyLinkLabel.textContent = ok ? 'Copied!' : 'Press ⌘+C';
+        copyLinkBtn.classList.add('copied');
+        setTimeout(() => {
+          copyLinkLabel.textContent = 'Copy link';
+          copyLinkBtn.classList.remove('copied');
+        }, 1600);
+        try { gtag('event', 'ct_copy_permalink', { country: stage1Country || 'unknown' }); } catch (e) {}
       });
     }
 
