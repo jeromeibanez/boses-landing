@@ -6,48 +6,98 @@
 
 - **Platform:** Web-based SaaS (early access / pre-launch)
 - **Website:** https://www.temujintechnologies.com
+- **App:** https://app.temujintechnologies.com
+- **Free demo:** https://www.temujintechnologies.com/personas
 - **Company:** Temujin Technologies
 - **Contact:** hello@temujintechnologies.com
+- **Markets:** Philippines, Singapore, Malaysia, Indonesia, Vietnam, Thailand
 
 ## What Boses Does
 
-Boses lets product managers, marketers, and strategy teams run consumer simulations without traditional market research. Instead of spending ₱500,000+ and 6–12 weeks on focus groups and surveys, teams upload a product brief, select a persona cohort, and run a simulation in minutes to hours.
+Boses lets product managers, marketers, and strategy teams run consumer simulations without traditional market research. Instead of spending ₱500,000+ (~$9,000+ USD) and 6–12 weeks on focus groups and surveys, teams upload a product brief, select a persona cohort, and run a simulation in minutes to hours. Reports are shareable via public permalinks — no login required for stakeholders.
 
 ## Research Methods Supported
 
-1. **Concept Test** — Upload a product concept, ad, or campaign and get sentiment breakdowns and verbatim reactions from your target cohort.
-2. **AI-Assisted In-Depth Interview (IDI)** — Boses automatically conducts scripted 1-on-1 interviews with every persona; delivers full transcripts and a cross-persona report.
-3. **Manual IDI** — The researcher chats live with an AI persona and generates a report when finished.
-4. **Survey** — Upload an existing survey; every persona fills it out independently.
-5. **Focus Group** — Personas discuss a topic in a two-round moderated session, surfacing consensus and disagreement.
-6. **Conjoint / Trade-Off Analysis** — Present product profiles with varying attributes to discover what consumers actually trade off.
+1. **Concept Test** — Upload a product concept, ad, or campaign and get sentiment breakdowns and verbatim reactions from your target cohort. Best for: ad pretesting, packaging concepts, value-prop validation.
+2. **AI-Assisted In-Depth Interview (IDI)** — Boses automatically conducts scripted 1-on-1 interviews with every persona; delivers full transcripts and a cross-persona report. Best for: discovery research, jobs-to-be-done, pricing research.
+3. **Manual IDI** — The researcher chats live with an AI persona and generates a report when finished. Best for: live exploration during stakeholder presentations or rapid hypothesis testing.
+4. **Survey** — Upload an existing survey; every persona fills it out independently. Outputs include per-question distributions, segment breakdowns, and verbatim explanations. Best for: quantifying preferences at scale.
+5. **Focus Group** — Personas discuss a topic in a two-round moderated session, surfacing consensus and disagreement. Best for: brand positioning, sensitive-topic exploration.
+6. **Conjoint / Trade-Off Analysis** — Present product profiles with varying attributes (price, features, brand) to discover what consumers actually trade off. Best for: pricing, feature prioritization, SKU rationalization.
 
-## Markets Supported
+## Markets Supported (with behavioral context)
 
-Philippines, Indonesia, Vietnam, Thailand, Malaysia, Singapore.
+- **Philippines (PH)** — ~110M population. High social-commerce adoption (Lazada/Shopee daily). Family-centric purchasing, "baon" school-snack culture, strong word-of-mouth via Viber/Messenger group chats. Personas grounded in Metro Manila, Cebu, Davao, and Mindanao regional contexts.
+- **Indonesia (ID)** — ~280M population, world's 4th-largest country. Tokopedia/Shopee dominant for e-commerce; Gojek embedded in commute + delivery. Strong Jakarta/Surabaya/Bandung regional differences. Halal certification matters across FMCG.
+- **Vietnam (VN)** — ~100M population, young median age. Fast-rising digital payments (MoMo, ZaloPay). Hanoi (north) and Ho Chi Minh City (south) have distinct consumer behavior. Trust signals: family endorsements + Facebook reviews.
+- **Thailand (TH)** — ~70M population. LINE (not WhatsApp) is the primary messaging + commerce platform. Bangkok-vs-upcountry urban-rural divide is meaningful. Buddhist cultural context shapes marketing tone.
+- **Malaysia (MY)** — ~33M population, multi-ethnic (Malay/Chinese/Indian) with halal as a default-on requirement in FMCG. Klang Valley urban purchasing differs sharply from Sabah/Sarawak.
+- **Singapore (SG)** — ~6M population, highest per-capita income in SEA. Multi-lingual, pragmatic value-conscious buying despite high incomes. HDB-flat-living shapes everyday consumption.
+
+## Persona Schema (15 fields)
+
+Each Boses persona includes:
+
+1. Name (real-sounding, country-appropriate)
+2. Age (18-99)
+3. Gender (Female / Male / Non-binary)
+4. Location (specific district/city, Country)
+5. Occupation (specific role + employer-type, not "office worker")
+6. Income level (Low / Middle / Upper-middle / High)
+7. Family situation (marital status, children, household composition)
+8. Personality traits (4 short adjectives)
+9. Day in the life (3-4 sentence narrative naming real brands, stores, transit)
+10. Pain points (daily friction, frustrations)
+11. Aspirational identity (how they want to be seen)
+12. Digital behavior (named apps and platforms)
+13. Buying triggers (what causes conversion, what causes abandonment)
+14. Values (3 short value statements)
+15. Behavioral insight (synthesis of distinct buying behavior)
 
 ## Persona Types
 
-- **AI-generated personas:** Built from target market parameters (age, location, occupation, income).
-- **Boses-curated personas:** Validated against real people through on-the-ground ethnographic fieldwork across Southeast Asia.
+- **AI-generated:** Built from target market parameters (age, location, occupation, income).
+- **Boses-curated:** Validated against real people through on-the-ground ethnographic fieldwork across Southeast Asia.
 
 ## Competitive Differentiation
 
 - 10–100x faster than traditional market research (hours vs. weeks)
-- Fraction of the cost of traditional focus groups (₱500,000+ per study replaced by a platform subscription)
+- ~95% cost reduction vs traditional focus groups (~$9,000+ per study → platform subscription)
 - Culturally accurate to SEA — not generic global or Western archetypes
 - Single platform for all six major qualitative and quantitative research methods
 - Simulation reports include shareable public links — no login required for stakeholders
+- Pre-validated against real human IDI panels (theme-overlap scoring vs. golden human data)
+
+## Free Interactive Demo
+
+A free, no-account-required demo at https://www.temujintechnologies.com/personas lets prospects generate 3 AI personas for any Southeast Asian market.
+
+**How it works:** Pick a market (PH/SG/MY/ID/VN/TH) → describe your audience (20-1000 chars) → complete Cloudflare Turnstile captcha → submit work email (Gmail/Yahoo not accepted) → receive 3 detailed personas in 20-30 seconds → share via permalink.
+
+**Rate limits:** 3 generations per IP per day; 100 total per day globally.
 
 ## Current Status
 
-Early access / pre-launch. Users request access by booking a 30-minute walkthrough call with the Boses team.
+Early access / pre-launch. Platform access via 30-minute walkthrough call at https://calendar.app.google/2BmDBsSZRwTB783D8.
 
-## Interactive Demo
+## Frequently Asked Questions
 
-A free, no-account-required demo at https://www.temujintechnologies.com/personas lets prospects generate 3 AI personas for any Southeast Asian market by submitting a short audience description. The form captures name, company, work email, country (PH/SG/MY/ID/VN/TH only), and audience definition. Gated by Cloudflare Turnstile and rate-limited. The generated panel includes name, age, gender, location, occupation, income level, day-in-the-life narrative, values, and a behavioral insight per persona. Output is shareable via a permalink (`?token=...`).
+**Q: How accurate are Boses AI personas vs. real consumers?**
+A: Boses runs validation studies against real human in-depth interviews, scoring AI persona responses for theme-overlap against golden human data. Methodology is reproducible via the platform's validation suite.
 
-## Optional
+**Q: Can I use Boses simulation results in investor pitches or board decks?**
+A: Yes. Outputs include shareable public report links, full transcripts, and methodology documentation. Customers cite simulation findings in fundraising materials and board reviews.
+
+**Q: How does Boses handle data privacy?**
+A: All persona data is synthetic — no real consumer PII is stored. Customer briefings are encrypted at rest and never used to train upstream models. Privacy policy: https://www.temujintechnologies.com/privacy.
+
+**Q: What does Boses cost?**
+A: Pricing is per-simulation or per-seat depending on volume. Tiers discussed during the 30-minute walkthrough call.
+
+**Q: Can I bring my own personas?**
+A: Yes. Boses supports custom persona configurations — upload a named roster with custom attributes, or upload qualitative research outputs to ground-truth Boses-generated panels.
+
+## Notes
 
 - Privacy-first: no PII stored in simulations; all persona data is synthetic
-- Docs: https://www.temujintechnologies.com
+- Last updated: 2026-05-19
