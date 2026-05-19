@@ -42,6 +42,68 @@
     gtag('config', 'G-3V6F7Y4GX5');
   </script>
 
+  <!-- JSON-LD Structured Data — entity recognition for Google + AI-search citation
+       (Perplexity, ChatGPT browse, Gemini grounding, Claude search). Mirrors the
+       @graph pattern from index.html but scoped to the free-demo page: WebPage +
+       SoftwareApplication (the generator itself as a product) + BreadcrumbList +
+       FAQPage with 4 demo-specific Q&As. Validate after deploy at
+       https://search.google.com/test/rich-results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "name": "Generate Free AI Personas for Southeast Asia",
+        "url": "https://www.temujintechnologies.com/personas",
+        "description": "Free demo of Boses — generate 3 AI personas for any Southeast Asian market in under a minute. No account or credit card required.",
+        "isPartOf": {"@type": "WebSite", "name": "Boses", "url": "https://www.temujintechnologies.com"},
+        "primaryImageOfPage": {"@type": "ImageObject", "url": "https://www.temujintechnologies.com/og-image.png"}
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Boses Free Persona Generator",
+        "applicationCategory": "BusinessApplication",
+        "applicationSubCategory": "Market Research",
+        "operatingSystem": "Web",
+        "url": "https://www.temujintechnologies.com/personas",
+        "description": "Generate 3 AI personas grounded in real Southeast Asian behavioral data. Pick a target market (Philippines, Indonesia, Vietnam, Thailand, Malaysia, Singapore), describe your audience, receive detailed personas in 20-30 seconds.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "description": "Free demo. No account required. 3 personas per submission."
+        },
+        "provider": {"@type": "Organization", "name": "Temujin Technologies", "url": "https://www.temujintechnologies.com"},
+        "featureList": [
+          "AI personas grounded in real Southeast Asian behavioral data",
+          "Six target markets: Philippines, Indonesia, Vietnam, Thailand, Malaysia, Singapore",
+          "15-field persona profiles: day-in-life, values, pain points, digital behavior, buying triggers",
+          "Permalink to share generated panels with stakeholders",
+          "No account or credit card required"
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.temujintechnologies.com"},
+          {"@type": "ListItem", "position": 2, "name": "Free Persona Generator", "item": "https://www.temujintechnologies.com/personas"}
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {"@type": "Question", "name": "Is the persona generator really free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The Boses free persona generator is no-account-required, no credit card needed. You get 3 detailed AI personas grounded in real Southeast Asian behavioral data, generated in 20-30 seconds. Rate-limited per IP to prevent abuse."}},
+          {"@type": "Question", "name": "What's included in each generated persona?", "acceptedAnswer": {"@type": "Answer", "text": "Each persona includes: full name appropriate to the country, age, gender, specific location, occupation, income level, family situation, personality traits, day-in-the-life narrative, pain points, aspirational identity, digital behavior with named apps and platforms, buying triggers, values, and a behavioral insight."}},
+          {"@type": "Question", "name": "Which Southeast Asian markets are supported?", "acceptedAnswer": {"@type": "Answer", "text": "Six markets: Philippines, Indonesia, Vietnam, Thailand, Malaysia, and Singapore. Each persona is culturally grounded — real-sounding names, specific districts, real local brands and apps."}},
+          {"@type": "Question", "name": "How long does generation take?", "acceptedAnswer": {"@type": "Answer", "text": "20-30 seconds. You receive 3 personas per submission and can share the panel via a permalink so stakeholders can review without creating an account."}}
+        ]
+      }
+    ]
+  }
+  </script>
+
   <!-- Cloudflare Turnstile widget -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
