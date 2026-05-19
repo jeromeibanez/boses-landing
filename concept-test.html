@@ -430,34 +430,6 @@
     }
     .results-header p { color: #52525b; margin: 0; font-size: 1rem; }
 
-    /* Concept image preview (the user's uploaded asset, shown above
-       reactions so reviewers see what was tested without leaving the page) */
-    .concept-preview {
-      max-width: 720px; margin: 0 auto 36px;
-      background: #fff; border: 1px solid #e4e4e7;
-      border-radius: 14px; padding: 18px;
-      display: none;
-    }
-    .concept-preview.visible { display: block; }
-    .concept-preview .preview-label {
-      font-size: 0.6875rem; font-weight: 600;
-      color: #a1a1aa;
-      text-transform: uppercase; letter-spacing: 0.07em;
-      margin: 0 0 12px;
-    }
-    .concept-preview img {
-      max-width: 100%; max-height: 360px;
-      margin: 0 auto;
-      border-radius: 8px;
-      border: 1px solid #e4e4e7;
-    }
-    .concept-preview .concept-text-block {
-      font-size: 0.9375rem; color: #3f3f46; line-height: 1.55;
-      margin-top: 12px;
-      padding: 14px;
-      background: #fafafa; border-radius: 10px;
-    }
-
     /* Aggregate panel — the cross-persona synthesis. Sits above the
        per-reaction cards because the prospect wants the headline before
        the verbatims. */
@@ -782,13 +754,6 @@
           <p>Each persona below was generated from your target market description and then ran through a real concept test against the material you submitted.</p>
         </div>
 
-        <!-- Concept preview (image and/or text the user submitted) -->
-        <div class="concept-preview" id="concept-preview">
-          <p class="preview-label">Concept Tested</p>
-          <img id="concept-preview-img" alt="Tested concept" style="display:none;" />
-          <div class="concept-text-block" id="concept-preview-text" style="display:none;"></div>
-        </div>
-
         <!-- Aggregate panel -->
         <div class="aggregate-panel" id="aggregate-panel">
           <h3>The whole panel said</h3>
@@ -875,9 +840,6 @@
     const heroSection = document.getElementById('hero-section');
     const pageFooter = document.getElementById('page-footer');
     const resultsSection = document.getElementById('results');
-    const conceptPreview = document.getElementById('concept-preview');
-    const conceptPreviewImg = document.getElementById('concept-preview-img');
-    const conceptPreviewText = document.getElementById('concept-preview-text');
     const sentimentBar = document.getElementById('sentiment-bar');
     const aggregateSummary = document.getElementById('aggregate-summary');
     const topThemes = document.getElementById('top-themes');
@@ -1056,32 +1018,6 @@
         .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
-    function renderConceptPreview(imageUrl, researchQuestionStr) {
-      // Show the brief (image) and the research question that was asked
-      // about it. Both panels appear above the reactions on the results
-      // page so a viewer (the prospect themselves OR someone they share
-      // the permalink with) sees what was tested and what was asked.
-      let shown = false;
-      if (imageUrl) {
-        conceptPreviewImg.src = imageUrl;
-        conceptPreviewImg.style.display = '';
-        shown = true;
-      } else {
-        conceptPreviewImg.style.display = 'none';
-      }
-      if (researchQuestionStr) {
-        // Prefix with "Q:" so the viewer immediately sees this is the
-        // question the personas were asked, not background text.
-        conceptPreviewText.textContent = 'Q: ' + researchQuestionStr;
-        conceptPreviewText.style.display = '';
-        shown = true;
-      } else {
-        conceptPreviewText.style.display = 'none';
-      }
-      if (shown) conceptPreview.classList.add('visible');
-      else conceptPreview.classList.remove('visible');
-    }
-
     function renderAggregate(agg) {
       // Sentiment bar — proportional 3-segment stacked bar. Segments
       // narrower than ~6% would be unreadable, so we hide them entirely
@@ -1149,10 +1085,10 @@
     }
 
     function renderResult(data) {
-      // Both submitted-side fields come from the server response now:
-      // concept_image_url + research_question. No need to stash anything
-      // locally — the permalink GET returns the same shape.
-      renderConceptPreview(data.concept_image_url, data.research_question);
+      // Renders just the aggregate panel + per-persona reaction cards.
+      // The "Concept Tested" preview panel was removed — the image
+      // upload exists only to feed the LLM, not to be re-displayed
+      // back to the user. The aggregate + reactions ARE the result.
       renderAggregate(data.aggregate || {});
       renderReactions(data.personas || [], data.individual_reactions || []);
     }
