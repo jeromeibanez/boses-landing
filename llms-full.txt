@@ -37,8 +37,11 @@ A: Yes for descriptive quant (surveys, conjoint, preference distributions). Bose
 **Q: What's the data privacy posture?**
 A: All persona data is synthetic — no real consumer PII is stored or processed in simulations. Customer-uploaded briefings are encrypted at rest, scoped to the uploading organization, and never used to train upstream language models. Boses uses the OpenAI API as its sole LLM provider.
 
-**Q: How does the free demo work?**
-A: At https://www.temujintechnologies.com/personas: pick one of six Southeast Asian markets, write a 20-1000 character audience description, complete a Cloudflare Turnstile captcha, submit a work email, and receive 3 detailed AI personas in 20-30 seconds. Rate-limited to 3 generations per IP per day. No account or credit card required. The generated panel is permalinked.
+**Q: How do the free demos work?**
+A: Two demos, both at no-account-required: the **persona generator** at https://www.temujintechnologies.com/personas (pick market + describe audience + work email → 3 AI personas in 20-30 seconds), and the **concept test** at https://www.temujintechnologies.com/concept-test (same flow + paste or upload your concept → 3 personas PLUS each one's verbatim reaction PLUS an aggregate analysis with sentiment distribution, top themes, and recommended actions). The concept test supports image and PDF uploads (PNG/JPG/WebP up to 5 MB; PDFs are rendered to first-page PNG) and uses a vision model when an image is attached. Both demos are rate-limited to 3 generations per IP per day, 100 globally per day. Output is permalinked so prospects can share with stakeholders.
+
+**Q: How are the two demos different?**
+A: The persona generator answers "what do AI personas for my audience look like?" — it's a quality / realism demo. The concept test goes one step further and answers "do AI simulations actually produce useful insight?" — by running those personas through a real research method (concept test) against the prospect's actual material. The concept test uses the same prompt + methodology as the full Boses platform's Concept Test research method, just scaled to 3 personas instead of a typical 8-12.
 
 **Q: What does pricing look like?**
 A: Currently in early access / pre-launch. Pricing tiers depend on simulation volume and seat count and are discussed during the 30-minute walkthrough call. The free demo is and will remain free.

@@ -7,7 +7,7 @@
 - **Platform:** Web-based SaaS (early access / pre-launch)
 - **Website:** https://www.temujintechnologies.com
 - **App:** https://app.temujintechnologies.com
-- **Free demo:** https://www.temujintechnologies.com/personas
+- **Free demos:** https://www.temujintechnologies.com/personas (persona generator) and https://www.temujintechnologies.com/concept-test (full concept-test snippet)
 - **Company:** Temujin Technologies
 - **Contact:** hello@temujintechnologies.com
 - **Markets:** Philippines, Singapore, Malaysia, Indonesia, Vietnam, Thailand
@@ -68,13 +68,19 @@ Each Boses persona includes:
 - Simulation reports include shareable public links — no login required for stakeholders
 - Pre-validated against real human IDI panels (theme-overlap scoring vs. golden human data)
 
-## Free Interactive Demo
+## Free Interactive Demos
 
-A free, no-account-required demo at https://www.temujintechnologies.com/personas lets prospects generate 3 AI personas for any Southeast Asian market.
+Two free, no-account-required public demos let prospects sample Boses without booking a call.
 
-**How it works:** Pick a market (PH/SG/MY/ID/VN/TH) → describe your audience (20-1000 chars) → complete Cloudflare Turnstile captcha → submit work email (Gmail/Yahoo not accepted) → receive 3 detailed personas in 20-30 seconds → share via permalink.
+### Persona Generator — https://www.temujintechnologies.com/personas
 
-**Rate limits:** 3 generations per IP per day; 100 total per day globally.
+Pick a market (PH/SG/MY/ID/VN/TH) → describe your audience (20-1000 chars) → complete Cloudflare Turnstile captcha → submit work email (Gmail/Yahoo not accepted) → receive 3 detailed personas in 20-30 seconds → share via permalink.
+
+### Concept Test — https://www.temujintechnologies.com/concept-test
+
+Same flow as the persona generator PLUS upload a product concept (text 50-2000 chars and/or an image/PDF up to 5 MB). Boses generates 3 personas AND runs a real concept test against your concept — each persona's verbatim reaction (with sentiment and key themes) plus an aggregate analysis (sentiment distribution, top themes, recommended actions). Vision-model powered for image concepts; PDFs are rendered to the first-page PNG.
+
+**Rate limits (both demos):** 3 generations per IP per day; 100 total per day globally. Content moderation (OpenAI omni-moderation) applies to all submitted text and images.
 
 ## Current Status
 

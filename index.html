@@ -2629,6 +2629,9 @@
               <a href="/personas" class="btn-white" id="cta-personas">
                 See 3 personas free
               </a>
+              <a href="/concept-test" class="btn-white" id="cta-concept-test">
+                Test a concept free
+              </a>
             </div>
             <p class="cta-note">No commitment. No deck. Just a live look at what your consumers actually think.</p>
           </div>
@@ -2745,13 +2748,15 @@
     if (sentSection) sentIO.observe(sentSection);
 
     // ── GA4 CTA click events ──────────────────────────────────────
-    // Two CTA families on this page:
-    //   *-cta             → Book a Call (calendar link, hard-conversion)
-    //   *-personas-cta /  → Generate 3 personas (soft-conversion funnel
-    //   cta-personas        entry — /personas page)
-    // Track both so we can measure which path each visitor takes and
-    // attribute the eventual hard conversion to the right entry point.
-    ['hero-cta', 'hero-personas-cta', 'how-cta', 'cta-main', 'cta-personas'].forEach(function (id) {
+    // Three CTA families on this page:
+    //   *-cta              → Book a Call (calendar link, hard conversion)
+    //   *-personas-cta /   → Generate 3 personas (soft-conversion funnel
+    //   cta-personas         entry — /personas)
+    //   cta-concept-test   → Run a concept test (deeper soft-conversion
+    //                        funnel — /concept-test)
+    // Track all three so the funnel exploration can attribute which entry
+    // point each lead came through.
+    ['hero-cta', 'hero-personas-cta', 'how-cta', 'cta-main', 'cta-personas', 'cta-concept-test'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.addEventListener('click', function () {
         if (typeof gtag === 'function') gtag('event', 'cta_click', { location: id });
