@@ -684,18 +684,15 @@
             </div>
 
             <div class="field">
-              <label for="concept_text">Your brief</label>
-              <textarea id="concept_text" name="concept_text" rows="4"
-                minlength="50" maxlength="2000"
-                placeholder="e.g. A new shelf-stable cheese snack for kids' school baon — &quot;no artificial flavors, real cheese first ingredient&quot;, PHP 25 for a 4-pack, targeted at SM and Robinsons supermarket shelves."
+              <label for="research_question">Research Question</label>
+              <textarea id="research_question" name="research_question" rows="3"
+                minlength="10" maxlength="500"
+                placeholder="e.g. What do you think of this packaging? Would you buy it at PHP 25? What stands out to you?"
               ></textarea>
-              <p class="hint">Same idea as a research brief inside the Boses platform — describe the product, ad, packaging concept, campaign tagline, pricing approach, or value-prop you want consumer feedback on. The more specific you are, the more useful the reactions. <strong>This isn't a question</strong> — the personas will be asked what they think of whatever you describe here. Optional if you upload a brief below; providing both gives richer context.</p>
             </div>
 
-            <div class="field-divider"><span>or also</span></div>
-
             <div class="field">
-              <label>Upload a brief — ad creative, packaging mockup, or PDF</label>
+              <label>Upload a brief — ad creative, packaging mockup, or PDF. This is what the personas will react to.</label>
               <div class="file-input-wrap" id="file-input-wrap">
                 <input id="concept_file" name="concept_file" type="file"
                   accept="image/png,image/jpeg,image/webp,application/pdf" />
@@ -1059,7 +1056,11 @@
         .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
-    function renderConceptPreview(imageUrl, conceptTextStr) {
+    function renderConceptPreview(imageUrl, researchQuestionStr) {
+      // Show the brief (image) and the research question that was asked
+      // about it. Both panels appear above the reactions on the results
+      // page so a viewer (the prospect themselves OR someone they share
+      // the permalink with) sees what was tested and what was asked.
       let shown = false;
       if (imageUrl) {
         conceptPreviewImg.src = imageUrl;
@@ -1068,8 +1069,10 @@
       } else {
         conceptPreviewImg.style.display = 'none';
       }
-      if (conceptTextStr) {
-        conceptPreviewText.textContent = conceptTextStr;
+      if (researchQuestionStr) {
+        // Prefix with "Q:" so the viewer immediately sees this is the
+        // question the personas were asked, not background text.
+        conceptPreviewText.textContent = 'Q: ' + researchQuestionStr;
         conceptPreviewText.style.display = '';
         shown = true;
       } else {
@@ -1145,8 +1148,11 @@
       });
     }
 
-    function renderResult(data, conceptTextStr) {
-      renderConceptPreview(data.concept_image_url, conceptTextStr);
+    function renderResult(data) {
+      // Both submitted-side fields come from the server response now:
+      // concept_image_url + research_question. No need to stash anything
+      // locally — the permalink GET returns the same shape.
+      renderConceptPreview(data.concept_image_url, data.research_question);
       renderAggregate(data.aggregate || {});
       renderReactions(data.personas || [], data.individual_reactions || []);
     }
@@ -1160,7 +1166,7 @@
 
       const country = document.getElementById('country').value;
       const audience = document.getElementById('audience_description').value.trim();
-      const conceptText = document.getElementById('concept_text').value.trim();
+      const researchQuestion = document.getElementById('research_question').value.trim();
       const conceptFile = fileInput.files && fileInput.files[0];
       const turnstileToken = getTurnstileToken();
 
@@ -1171,12 +1177,16 @@
         showError(stage1Error, 'Please describe the audience in a bit more detail (at least 20 characters).', 'short_audience');
         return;
       }
-      if (!conceptText && !conceptFile) {
-        showError(stage1Error, 'Provide a concept description (50+ chars) or upload an image/PDF.', 'no_concept');
+      if (!researchQuestion || researchQuestion.length < 10) {
+        showError(stage1Error, 'Add a research question (10+ characters) — what should the personas react to about the brief?', 'short_research_question');
         return;
       }
-      if (conceptText && conceptText.length < 50) {
-        showError(stage1Error, 'Concept description must be at least 50 characters (or upload a file instead).', 'short_concept');
+      if (researchQuestion.length > 500) {
+        showError(stage1Error, 'Research question is too long (500 character maximum).', 'long_research_question');
+        return;
+      }
+      if (!conceptFile) {
+        showError(stage1Error, 'Upload a brief — ad creative, packaging mockup, or PDF. This is what the personas will react to.', 'missing_file');
         return;
       }
       if (!turnstileToken) {
@@ -1184,7 +1194,7 @@
         return;
       }
       // Client-side file-size pre-check (server also enforces).
-      if (conceptFile && conceptFile.size > 5 * 1024 * 1024) {
+      if (conceptFile.size > 5 * 1024 * 1024) {
         showError(stage1Error, 'File exceeds 5 MB. Please upload a smaller image or PDF.', 'file_too_large');
         return;
       }
@@ -1193,8 +1203,8 @@
       fd.append('country', country);
       fd.append('audience_description', audience);
       fd.append('turnstile_token', turnstileToken);
-      if (conceptText) fd.append('concept_text', conceptText);
-      if (conceptFile) fd.append('concept_file', conceptFile);
+      fd.append('research_question', researchQuestion);
+      fd.append('concept_file', conceptFile);
 
       setStage1Loading(true);
       try {
@@ -1228,8 +1238,11 @@
         try {
           gtag('event', 'ct_started', {
             country: country,
-            has_image: conceptFile ? 1 : 0,
-            has_text: conceptText ? 1 : 0,
+            // Brief + research question are both always present now
+            // (required). Keep `question_length` for funnel-quality
+            // analytics — short questions might correlate with weak
+            // reactions, worth measuring.
+            question_length: researchQuestion.length,
           });
         } catch (e) {}
       } catch (err) {
@@ -1278,10 +1291,9 @@
       startLoader();
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Capture the concept text + file so we can render the preview
-      // panel on success (the server doesn't echo the original text back
-      // for that — we know it locally).
-      const submittedText = document.getElementById('concept_text').value.trim();
+      // The /complete response now includes research_question, so we
+      // don't need to stash it locally for rendering — renderResult
+      // reads it from `data.research_question` directly.
 
       try {
         const resp = await fetch(`${API_BASE}/public/concept-test/complete`, {
@@ -1313,7 +1325,7 @@
           return;
         }
         const result = await resp.json();
-        renderResult(result, submittedText);
+        renderResult(result);
 
         try {
           gtag('event', 'ct_captured', {
@@ -1401,11 +1413,10 @@
           return;
         }
         const result = await resp.json();
-        // On a permalink visit we don't have the original submitted text
-        // (the API doesn't return concept_text in the response). The
-        // preview block stays hidden — the image URL alone is enough
-        // context, and the aggregate + reactions are the point.
-        renderResult(result, null);
+        // Permalink visit: the API response now includes research_question
+        // AND concept_image_url, so renderResult can display the full
+        // "Q: …" + brief preview just like a fresh submission would.
+        renderResult(result);
       } catch (err) {
         reactionGrid.innerHTML = '<p style="text-align:center;color:#b91c1c;font-size:0.9375rem;">Could not load your panel. Try refreshing.</p>';
       }
