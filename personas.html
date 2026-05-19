@@ -664,7 +664,7 @@
           <h3>Want to actually run research with personas like these?</h3>
           <p>Boses lets you run surveys, in-depth interviews, focus groups, and concept tests on AI panels grounded in real SEA behavioral data. Real results in hours, not months.</p>
           <div class="cta-buttons">
-            <a href="https://calendar.app.google/2BmDBsSZRwTB783D8" class="btn-primary" target="_blank" rel="noopener">Book a 30-min call</a>
+            <a href="https://calendar.app.google/2BmDBsSZRwTB783D8" class="btn-primary" target="_blank" rel="noopener" id="results-book-call-cta">Book a 30-min call</a>
             <button type="button" class="btn-ghost" id="regenerate-btn">Try another audience</button>
           </div>
         </div>
@@ -755,10 +755,37 @@
     // ═══════════════════════════════════════════════════════════════════
     // Helpers
     // ═══════════════════════════════════════════════════════════════════
-    function showError(box, message) {
+    function showError(box, message, reason) {
       box.textContent = message;
       box.classList.add('visible');
       box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // GA4 — funnel-quality signal. `reason` is the only param worth
+      // analyzing; `stage` is derived from the error element's id so we
+      // never have to remember to pass it. Wrapped in try/catch because
+      // gtag may not be loaded (ad blockers, network race) and we never
+      // want an analytics failure to swallow the error message.
+      if (reason) {
+        try {
+          gtag('event', 'lead_failed', {
+            stage: box.id === 'stage2-error' ? 2 : 1,
+            reason: reason,
+          });
+        } catch (e) {}
+      }
+    }
+
+    // Map the body.detail string from a 400 response on /complete into a
+    // stable reason key. The backend phrases vary ("Use a work email",
+    // "Disposable email addresses…", "Your session expired", "Your form
+    // was already submitted"), but for analytics we want a small fixed
+    // vocabulary so dashboards don't fracture on phrasing edits.
+    function classify400Reason(detail) {
+      const d = (detail || '').toLowerCase();
+      if (/work email|gmail|yahoo|personal/.test(d)) return 'free_email';
+      if (/disposable/.test(d)) return 'disposable_email';
+      if (/already submitted/.test(d)) return 'ticket_replay';
+      if (/session expired|expired/.test(d)) return 'ticket_expired';
+      return 'bad_request';
     }
     function clearError(box) {
       box.textContent = '';
@@ -1007,13 +1034,13 @@
         turnstile_token: getTurnstileToken(),
       };
 
-      if (!data.country) { showError(stage1Error, 'Please choose a target market.'); return; }
+      if (!data.country) { showError(stage1Error, 'Please choose a target market.', 'no_country'); return; }
       if (!data.audience_description || data.audience_description.length < 20) {
-        showError(stage1Error, 'Please describe the audience in a bit more detail (at least 20 characters).');
+        showError(stage1Error, 'Please describe the audience in a bit more detail (at least 20 characters).', 'short_audience');
         return;
       }
       if (!data.turnstile_token) {
-        showError(stage1Error, 'Please complete the captcha above.');
+        showError(stage1Error, 'Please complete the captcha above.', 'no_captcha');
         return;
       }
 
@@ -1026,10 +1053,10 @@
         });
         if (!resp.ok) {
           const body = await resp.json().catch(() => ({}));
-          if (resp.status === 400) showError(stage1Error, body.detail || 'Captcha verification failed. Please try the captcha again.');
-          else if (resp.status === 422) showError(stage1Error, 'Some of your inputs are invalid. Please double-check the form.');
-          else if (resp.status === 429) showError(stage1Error, 'Too many attempts from this network. Please try again later.');
-          else showError(stage1Error, 'Something went wrong. Please try again.');
+          if (resp.status === 400) showError(stage1Error, body.detail || 'Captcha verification failed. Please try the captcha again.', 'captcha_failed');
+          else if (resp.status === 422) showError(stage1Error, 'Some of your inputs are invalid. Please double-check the form.', 'invalid_input');
+          else if (resp.status === 429) showError(stage1Error, 'Too many attempts from this network. Please try again later.', 'rate_limited');
+          else showError(stage1Error, 'Something went wrong. Please try again.', 'server_error');
           resetTurnstile();
           return;
         }
@@ -1051,7 +1078,7 @@
         } catch (e) {}
       } catch (err) {
         console.error('stage 1 submit failed', err);
-        showError(stage1Error, 'Network error. Please check your connection and try again.');
+        showError(stage1Error, 'Network error. Please check your connection and try again.', 'network_error');
         resetTurnstile();
       } finally {
         setStage1Loading(false);
@@ -1066,7 +1093,7 @@
       clearError(stage2Error);
 
       if (!stage1Ticket) {
-        showError(stage2Error, 'Your session expired. Please start over.');
+        showError(stage2Error, 'Your session expired. Please start over.', 'ticket_expired');
         // Reset flow
         setTimeout(() => {
           stage2Form.style.display = 'none';
@@ -1085,11 +1112,11 @@
       };
 
       if (!data.name || !data.company || !data.email) {
-        showError(stage2Error, 'Please complete all fields.');
+        showError(stage2Error, 'Please complete all fields.', 'missing_fields');
         return;
       }
       if (!document.getElementById('consent').checked) {
-        showError(stage2Error, 'Please confirm you agree to be contacted.');
+        showError(stage2Error, 'Please confirm you agree to be contacted.', 'no_consent');
         return;
       }
 
@@ -1117,8 +1144,10 @@
           stage2Form.style.display = '';
           const body = await resp.json().catch(() => ({}));
           if (resp.status === 400) {
-            // 400 can be: free-email, disposable-email, expired ticket
-            showError(stage2Error, body.detail || 'Please check your inputs and try again.');
+            // 400 can be: free-email, disposable-email, expired ticket,
+            // ticket replay. classify400Reason() routes to a stable
+            // analytics key so the dashboards see the breakdown.
+            showError(stage2Error, body.detail || 'Please check your inputs and try again.', classify400Reason(body.detail));
             // If ticket expired, send user back to stage 1
             if (body.detail && /session expired/i.test(body.detail)) {
               setTimeout(() => {
@@ -1129,11 +1158,11 @@
                 resetTurnstile();
               }, 2500);
             }
-          } else if (resp.status === 422) showError(stage2Error, 'Some of your inputs are invalid.');
-          else if (resp.status === 429) showError(stage2Error, 'Too many attempts. Please try again later.');
-          else if (resp.status === 502) showError(stage2Error, 'Our generator had a hiccup. Please try again.');
-          else if (resp.status === 503) showError(stage2Error, body.detail || 'We\'re at capacity for free demos today. Please try again tomorrow.');
-          else showError(stage2Error, 'Something went wrong. Please try again.');
+          } else if (resp.status === 422) showError(stage2Error, 'Some of your inputs are invalid.', 'invalid_input');
+          else if (resp.status === 429) showError(stage2Error, 'Too many attempts. Please try again later.', 'rate_limited');
+          else if (resp.status === 502) showError(stage2Error, 'Our generator had a hiccup. Please try again.', 'generator_failed');
+          else if (resp.status === 503) showError(stage2Error, body.detail || 'We\'re at capacity for free demos today. Please try again tomorrow.', 'daily_cap');
+          else showError(stage2Error, 'Something went wrong. Please try again.', 'server_error');
           return;
         }
 
@@ -1170,7 +1199,7 @@
         stopLoader();
         heroSection.style.display = '';
         stage2Form.style.display = '';
-        showError(stage2Error, 'Network error. Please check your connection and try again.');
+        showError(stage2Error, 'Network error. Please check your connection and try again.', 'network_error');
       } finally {
         setStage2Loading(false);
       }
@@ -1178,6 +1207,10 @@
 
     // "Try another audience" — full reset back to stage 1
     regenerateBtn.addEventListener('click', () => {
+      // GA4 — engagement signal. Tells us whether leads who saw their
+      // first panel cared enough to ask for a second take. Try/catch
+      // because gtag may not be loaded; never block the reset on it.
+      try { gtag('event', 'regenerate_click', { country: stage1Country || 'unknown' }); } catch (e) {}
       try { window.history.replaceState({}, '', window.location.pathname); } catch (e) {}
       stage1Ticket = null;
       stage1Country = null;
@@ -1194,6 +1227,21 @@
       resetTurnstile();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+
+    // "Book a 30-min call" from the post-results CTA — THE soft→hard
+    // conversion event. Without this, leads who convert to a sales call
+    // after generating personas are invisible to the funnel. The link
+    // opens calendar.app.google in a new tab, so the click handler fires
+    // before navigation and gtag's sendBeacon delivers the event even
+    // though our tab loses focus to the new tab.
+    const resultsBookCallBtn = document.getElementById('results-book-call-cta');
+    if (resultsBookCallBtn) {
+      resultsBookCallBtn.addEventListener('click', () => {
+        try {
+          gtag('event', 'results_book_call', { country: stage1Country || 'unknown' });
+        } catch (e) {}
+      });
+    }
 
     // ═══════════════════════════════════════════════════════════════════
     // Permalink mode — if URL has ?token=…, fetch + show personas instead
