@@ -503,6 +503,51 @@
     }
 
     /* ── Floating mockup cards ── */
+    /* I-2: Mobile-only simplified mockup card. Hidden on desktop
+       where .hero-right shows the full 4-card floating layout. */
+    .hero-mobile-mockup { display: none; margin: 24px auto 0; max-width: 360px; }
+    .mobile-mock-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.20);
+      text-align: left;
+    }
+    .mobile-mock-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .mobile-mock-av {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 0.8125rem;
+    }
+    .mobile-mock-name { font-size: 0.9375rem; font-weight: 600; color: #fff; }
+    .mobile-mock-meta { font-size: 0.75rem; color: rgba(255,255,255,0.5); }
+    .mobile-mock-pill {
+      margin-left: auto;
+      padding: 3px 10px;
+      background: rgba(16,185,129,0.18);
+      color: #6ee7b7;
+      border-radius: 99px;
+      font-size: 0.6875rem; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .mobile-mock-quote {
+      font-size: 0.875rem; line-height: 1.55;
+      color: rgba(255,255,255,0.78);
+      font-style: italic;
+      margin-bottom: 12px;
+      padding-left: 10px;
+      border-left: 2px solid rgba(165,180,252,0.4);
+    }
+    .mobile-mock-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .mobile-mock-tag {
+      padding: 3px 9px;
+      background: rgba(99,102,241,0.18);
+      color: #a5b4fc;
+      border-radius: 99px;
+      font-size: 0.6875rem; font-weight: 500;
+    }
     .hero-right {
       position: relative; height: 520px;
     }
@@ -1572,6 +1617,7 @@
       /* Hero: tighter on mobile */
       .hero { padding: 80px 0 56px; min-height: auto; }
       .hero-right { display: none; }
+      .hero-mobile-mockup { display: block; }
       .scroll-hint { display: none; }
       .hero-flags { gap: 8px; flex-wrap: wrap; justify-content: center; overflow-x: unset; padding-bottom: 0; }
       .section-header { margin-bottom: 32px; }
@@ -1816,13 +1862,37 @@
           <div class="mock-card mock-insight">
             <div class="mock-insight-inner">
               <div class="mock-insight-icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a5b4fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a5b4fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
               </div>
               <div class="mock-insight-label">Top Recommendation</div>
               <div class="mock-insight-text">Lead with time-savings in onboarding copy for Manila segment</div>
             </div>
           </div>
 
+        </div>
+
+        <!-- I-2: Mobile-only single-card mockup. Desktop sees the
+             floating 4-card layout above; mobile sees this stripped
+             one-card version so they still get the "what does the
+             actual product look like" signal that hero-right
+             provides on bigger screens. -->
+        <div class="hero-mobile-mockup" aria-hidden="true">
+          <div class="mobile-mock-card">
+            <div class="mobile-mock-head">
+              <div class="mobile-mock-av" style="background:#7c3aed">MA</div>
+              <div>
+                <div class="mobile-mock-name">Maria A.</div>
+                <div class="mobile-mock-meta">28 · Brand Manager · Manila</div>
+              </div>
+              <span class="mobile-mock-pill">Positive</span>
+            </div>
+            <div class="mobile-mock-quote">"This addresses a real gap — I've been doing manual sentiment checks on comment sections for months."</div>
+            <div class="mobile-mock-tags">
+              <span class="mobile-mock-tag">Time-saving</span>
+              <span class="mobile-mock-tag">SEA-relevant</span>
+              <span class="mobile-mock-tag">Easy to adopt</span>
+            </div>
+          </div>
         </div>
       </div>
 

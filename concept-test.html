@@ -289,6 +289,20 @@
     .file-preview .filename {
       font-size: 0.75rem; color: #6b7280;
     }
+    /* CT-3: PDF preview affordance — when the upload is a PDF we
+       can't render a thumb client-side without pulling in pdf.js,
+       but a styled icon + filename reads as "we know what you
+       uploaded" rather than "filename only". Larger + colored. */
+    .file-preview .pdf-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 64px; height: 80px;
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      color: #b91c1c;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.06em;
+    }
 
     @media (max-width: 480px) {
       .form-card { padding: 22px 14px; }
@@ -547,10 +561,12 @@
       background: #fafafa; padding: 14px 16px; border-radius: 10px;
     }
 
-    /* Per-persona reaction cards */
+    /* Per-persona reaction cards. CT-4: dropped min column from
+       420px → 360px so tablet portrait (iPad ~768px) shows two
+       cards side-by-side instead of one stranded column. */
     .reaction-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
       gap: 20px;
       max-width: 1120px; margin: 0 auto 48px;
     }
@@ -743,6 +759,7 @@
               </div>
               <div class="file-preview" id="file-preview">
                 <img id="file-preview-img" alt="Concept preview" />
+                <div class="pdf-icon" id="file-preview-pdf-icon" style="display:none;" aria-hidden="true">PDF</div>
                 <div class="filename" id="file-preview-name"></div>
               </div>
               <div class="file-size-warning" id="file-size-warning" role="alert"></div>
@@ -827,11 +844,7 @@
         <div class="aggregate-panel" id="aggregate-panel">
           <h3>The whole panel said</h3>
           <div class="sentiment-bar" id="sentiment-bar"></div>
-          <div class="sentiment-bar-legend">
-            <span><span class="swatch positive"></span>Positive</span>
-            <span><span class="swatch neutral"></span>Neutral</span>
-            <span><span class="swatch negative"></span>Negative</span>
-          </div>
+          <div class="sentiment-bar-legend" id="sentiment-bar-legend"></div>
           <div class="aggregate-summary" id="aggregate-summary"></div>
 
           <p class="aggregate-section-label">Top themes</p>
@@ -1027,12 +1040,18 @@
       fileInputLabel.textContent = 'File ready • click to change';
       filePreviewName.textContent = f.name;
 
+      const pdfIcon = document.getElementById('file-preview-pdf-icon');
       if (f.type.startsWith('image/')) {
         const url = URL.createObjectURL(f);
         filePreviewImg.src = url;
         filePreviewImg.style.display = '';
+        if (pdfIcon) pdfIcon.style.display = 'none';
       } else {
+        // CT-3: PDF/other — hide the broken image element and show
+        // a styled PDF icon affordance so the user gets a clearer
+        // "yes we received this" signal than just a filename string.
         filePreviewImg.style.display = 'none';
+        if (pdfIcon) pdfIcon.style.display = '';
       }
       filePreview.classList.add('visible');
     });
@@ -1136,11 +1155,15 @@
 
     function renderAggregate(agg) {
       // Sentiment bar — proportional 3-segment stacked bar. Segments
-      // narrower than ~6% would be unreadable, so we hide them entirely
-      // (the legend below still names all three sentiment buckets).
+      // narrower than ~6% would be unreadable, so we hide them entirely.
+      // CT-2: legend is now also dynamic — sentiments with 0 count
+      // get dropped from both the bar AND the legend so the user
+      // doesn't see a "Negative" swatch when there are no negatives.
       const dist = agg.sentiment_distribution || {};
       const total = (dist.Positive || 0) + (dist.Neutral || 0) + (dist.Negative || 0);
       sentimentBar.innerHTML = '';
+      const legendEl = document.getElementById('sentiment-bar-legend');
+      if (legendEl) legendEl.innerHTML = '';
       if (total > 0) {
         ['Positive', 'Neutral', 'Negative'].forEach((k) => {
           const n = dist[k] || 0;
@@ -1151,6 +1174,11 @@
           seg.style.flexBasis = pct.toFixed(2) + '%';
           if (pct >= 14) seg.textContent = n;
           sentimentBar.appendChild(seg);
+          if (legendEl) {
+            const entry = document.createElement('span');
+            entry.innerHTML = `<span class="swatch ${k.toLowerCase()}"></span>${k} (${n})`;
+            legendEl.appendChild(entry);
+          }
         });
       }
 

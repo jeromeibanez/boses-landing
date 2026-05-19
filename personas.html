@@ -622,25 +622,44 @@
       margin: 0;
     }
 
+    /* P-4: light-bg post-results CTA. Previously dark (#080810)
+       which read as "footer promo" disconnected from the light
+       results section above. Indigo-tinted bg + left accent
+       integrates it as the natural next step instead. */
     .post-results-cta {
       max-width: 640px; margin: 0 auto; text-align: center;
       padding: 36px 32px;
-      background: #080810; color: #fff; border-radius: 16px;
+      background: linear-gradient(135deg, #f5f3ff 0%, #eef2ff 100%);
+      color: #1e1b4b;
+      border-radius: 16px;
+      border: 1px solid #c7d2fe;
+      border-left: 4px solid #6366f1;
     }
-    .post-results-cta h3 { font-size: 1.375rem; font-weight: 700; margin: 0 0 10px; letter-spacing: -0.01em; }
-    .post-results-cta p { color: rgba(255,255,255,0.7); margin: 0 0 24px; font-size: 0.9375rem; }
+    .post-results-cta h3 { font-size: 1.375rem; font-weight: 700; margin: 0 0 10px; letter-spacing: -0.01em; color: #1e1b4b; }
+    .post-results-cta p { color: #4338ca; margin: 0 0 24px; font-size: 0.9375rem; }
     .post-results-cta .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    /* Ghost button on light bg — dark text on transparent with
+       indigo hover. Overrides the previous dark-only treatment. */
     .btn-ghost {
       display: inline-flex; align-items: center; justify-content: center;
       padding: 13px 22px;
       background: transparent;
-      color: rgba(255,255,255,0.85);
-      border: 1px solid rgba(255,255,255,0.25);
+      color: #4338ca;
+      border: 1px solid #c7d2fe;
       border-radius: 10px;
       font-size: 0.9375rem; font-weight: 600; font-family: inherit;
       cursor: pointer; transition: all 0.18s; text-decoration: none;
     }
-    .btn-ghost:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.45); color: #fff; }
+    .btn-ghost:hover { background: rgba(99,102,241,0.06); border-color: #818cf8; color: #312e81; }
+    /* Copy-link button — re-themed to match the light post-results
+       panel. Was indigo-on-dark-bg, now indigo-on-light. */
+    .btn-copy-link {
+      background: rgba(99,102,241,0.08);
+      color: #4338ca;
+      border-color: #c7d2fe;
+    }
+    .btn-copy-link:hover { background: rgba(99,102,241,0.14); }
+    .btn-copy-link.copied { background: rgba(16,185,129,0.16); border-color: #6ee7b7; color: #047857; }
 
     /* Footer */
     footer { background: #0a0a0a; color: rgba(255,255,255,0.55); padding: 56px 0 28px; }
@@ -665,6 +684,13 @@
       .hero { padding: 28px 0 24px; }
       .form-card { padding: 24px 22px; }
       .results { padding: 56px 0; }
+    }
+    /* P-13: at very narrow viewports (≤480px) the form previously
+       collapsed to 22px vertical / 14px horizontal padding. That
+       gave only ~292px usable width on iPhone SE — cramped. Bumped
+       horizontal to 18px so inputs breathe a bit. */
+    @media (max-width: 480px) {
+      .form-card { padding: 22px 18px; }
     }
   </style>
 </head>
@@ -981,10 +1007,11 @@
       { pct: 26, text: 'Drafting persona profiles…' },
       { pct: 44, text: 'Grounding in local market context…' },
       { pct: 60, text: 'Mapping pain points and aspirations…' },
-      { pct: 76, text: 'Adding digital habits and buying triggers…' },
-      { pct: 88, text: 'Finalizing the researcher’s notes…' },
+      { pct: 70, text: 'Adding digital habits and buying triggers…' },
+      { pct: 80, text: 'Finalizing the researcher’s notes…' },
     ];
     let loaderInterval = null;
+    let loaderDriftInterval = null;
     function applyLoaderStage(stage) {
       // Brief fade between status lines so the change is noticed
       // without feeling distracting.
@@ -1022,11 +1049,24 @@
         applyLoaderStage(LOADER_STAGES[i]);
         i++;
       }, 4000);
+
+      // P-3: subtle drift between 80% and 86% once the last stage
+      // lands, so the bar never looks frozen. Honest about not
+      // knowing the actual progress, but visually alive.
+      loaderDriftInterval = setInterval(() => {
+        if (i < LOADER_STAGES.length) return;  // only drift after the last stage
+        const drift = 80 + Math.random() * 6;
+        loaderProgressBar.style.width = drift.toFixed(1) + '%';
+      }, 1200);
     }
     function stopLoader() {
       if (loaderInterval) {
         clearInterval(loaderInterval);
         loaderInterval = null;
+      }
+      if (loaderDriftInterval) {
+        clearInterval(loaderDriftInterval);
+        loaderDriftInterval = null;
       }
       // Restore the footer — both downstream paths (results reveal on
       // success, form return on error) want the footer back. Done here
