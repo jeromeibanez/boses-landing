@@ -2754,6 +2754,29 @@
 
 
   <script>
+    // ── Cold-start pre-warm ─────────────────────────────────────
+    // The Boses API runs on Render's free plan and spins down after
+    // 15 minutes idle. Cold start takes 30-60 seconds, during which
+    // the first request from /personas or /concept-test hangs and
+    // the visitor's browser usually times out — lead lost.
+    //
+    // Firing /health on the homepage as well as the demo pages means
+    // the dyno is (probably) already awake by the time a visitor
+    // clicks through. Same self-contained URL sniff as the demo pages
+    // so localhost / staging / prod all route correctly. Best-effort —
+    // we swallow all errors and don't care about the response.
+    try {
+      const _apiBase = (() => {
+        const h = window.location.hostname;
+        if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:8000/api/v1';
+        if (h.startsWith('staging.') || h.includes('staging')) return 'https://api-staging.temujintechnologies.com/api/v1';
+        return 'https://api.temujintechnologies.com/api/v1';
+      })();
+      const _apiRoot = _apiBase.replace(/\/api\/v1$/, '');
+      fetch(`${_apiRoot}/health`, { method: 'GET', mode: 'cors', cache: 'no-store' })
+        .catch(() => {});
+    } catch (e) {}
+
     // ── Sticky nav ──────────────────────────────────────────────
     const navbar = document.getElementById('navbar');
     const onScroll = () => navbar.classList.toggle('scrolled', window.scrollY > 24);
