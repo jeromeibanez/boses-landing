@@ -831,6 +831,30 @@
       </div>
     </section>
 
+    <!-- INBOX FALLBACK — shown when stage 2 fetch fails after submit (network/disconnect).
+         Reuses the `.results` styling so it appears in the same place + same look as the
+         success state. The backend probably completed and is emailing the user; we re-frame
+         the dropped connection as a positive "check your inbox" state rather than the
+         scary "Network failure" message the user used to see. See JeromeIbanez/boses#374
+         for the architectural fix that eliminates this failure mode entirely. -->
+    <section class="results" id="inbox-fallback" aria-live="polite">
+      <div class="container">
+        <div class="results-header">
+          <span class="eyebrow">Your concept test is on its way</span>
+          <h2>Check your inbox — we&rsquo;ve emailed you the permalink 📧</h2>
+          <p>Concept tests usually complete in 30&ndash;90 seconds, and the email lands as soon as the report is ready. Check your inbox (and spam folder, just in case) in the next few minutes.</p>
+        </div>
+
+        <div class="post-results-cta">
+          <h3>Didn&rsquo;t get the email after 5 minutes?</h3>
+          <p>The request may not have gone through. Try again with the same audience and concept.</p>
+          <div class="cta-buttons">
+            <button type="button" class="btn-ghost" id="inbox-fallback-retry-btn">Try again</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- RESULTS section -->
     <section class="results" id="results">
       <div class="container">
@@ -926,6 +950,8 @@
     const heroSection = document.getElementById('hero-section');
     const pageFooter = document.getElementById('page-footer');
     const resultsSection = document.getElementById('results');
+    const inboxFallbackSection = document.getElementById('inbox-fallback');
+    const inboxFallbackRetryBtn = document.getElementById('inbox-fallback-retry-btn');
     const sentimentBar = document.getElementById('sentiment-bar');
     const aggregateSummary = document.getElementById('aggregate-summary');
     const topThemes = document.getElementById('top-themes');
@@ -1444,14 +1470,53 @@
         resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } catch (err) {
         console.error('concept-test stage 2 submit failed', err);
+        // Network/disconnect error on stage 2 — almost always means
+        // Cloudflare's edge timeout (~100s on the free tier) dropped
+        // the connection while the backend's LLM call was still running.
+        // The backend probably completed the work and emailed the user
+        // their permalink; only the in-browser response got lost. Pivot
+        // the UI to a positive "check your inbox" state instead of the
+        // misleading "Network failure" toast that used to surface here.
+        // The architectural fix (move LLM to procrastinate + poll for
+        // status) is tracked at JeromeIbanez/boses#374; this is the
+        // pure-UX patch.
         stopLoader();
-        heroSection.style.display = '';
-        stage2Form.style.display = '';
-        showError(stage2Error, 'Network error. Please check your connection and try again.', 'network_error');
+        heroSection.style.display = 'none';
+        stage1Form.style.display = 'none';
+        stage2Form.style.display = 'none';
+        inboxFallbackSection.classList.add('visible');
+        inboxFallbackSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        try {
+          gtag('event', 'ct_inbox_fallback', { country: stage1Country || 'unknown' });
+        } catch (e) {}
       } finally {
         setStage2Loading(false);
       }
     });
+
+    // Inbox-fallback "Try again" — same reset pattern as regenerateBtn below.
+    // Lets a user retry if they don't see the email, while distinguishing
+    // their intent from "I got my report, let me try another concept."
+    if (inboxFallbackRetryBtn) {
+      inboxFallbackRetryBtn.addEventListener('click', () => {
+        try {
+          gtag('event', 'ct_inbox_fallback_retry', {
+            country: stage1Country || 'unknown',
+          });
+        } catch (e) {}
+        try { window.history.replaceState({}, '', window.location.pathname); } catch (e) {}
+        stage1Ticket = null;
+        stage1Country = null;
+        inboxFallbackSection.classList.remove('visible');
+        stage2Form.style.display = 'none';
+        heroSection.style.display = '';
+        stage1Form.style.display = '';
+        stage1Form.reset();
+        stage2Form.reset();
+        resetTurnstile();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
 
     // "Try another concept" — full reset
     regenerateBtn.addEventListener('click', () => {
