@@ -2755,16 +2755,23 @@
 
   <script>
     // ── Cold-start pre-warm ─────────────────────────────────────
-    // The Boses API runs on Render's free plan and spins down after
-    // 15 minutes idle. Cold start takes 30-60 seconds, during which
-    // the first request from /personas or /concept-test hangs and
-    // the visitor's browser usually times out — lead lost.
+    // The Boses API AND frontend app both run on Render's free plan
+    // and spin down after 15 minutes idle. Cold start takes 30-60s
+    // per service. Without pre-warming, a visitor hits a cold start
+    // once when /personas or /concept-test submits (waking the API),
+    // and AGAIN when a successful submit routes them to
+    // app.temujintechnologies.com (Sign up, dashboard, etc.).
     //
-    // Firing /health on the homepage as well as the demo pages means
-    // the dyno is (probably) already awake by the time a visitor
-    // clicks through. Same self-contained URL sniff as the demo pages
-    // so localhost / staging / prod all route correctly. Best-effort —
-    // we swallow all errors and don't care about the response.
+    // Firing both /health (API) and /favicon.ico (app) on the
+    // homepage in parallel means both dynos are (probably) already
+    // awake by the time a visitor clicks through. Same self-contained
+    // URL sniff as the demo pages so localhost / staging / prod all
+    // route correctly. Best-effort — we swallow all errors and don't
+    // care about either response.
+    //
+    // mode:'no-cors' on the app ping makes it an opaque request: the
+    // server still receives the GET (which wakes the dyno) but we
+    // can't read the response. We don't need to.
     try {
       const _apiBase = (() => {
         const h = window.location.hostname;
@@ -2772,8 +2779,16 @@
         if (h.startsWith('staging.') || h.includes('staging')) return 'https://api-staging.temujintechnologies.com/api/v1';
         return 'https://api.temujintechnologies.com/api/v1';
       })();
+      const _appUrl = (() => {
+        const h = window.location.hostname;
+        if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:3000';
+        if (h.startsWith('staging.') || h.includes('staging')) return 'https://staging.temujintechnologies.com';
+        return 'https://app.temujintechnologies.com';
+      })();
       const _apiRoot = _apiBase.replace(/\/api\/v1$/, '');
       fetch(`${_apiRoot}/health`, { method: 'GET', mode: 'cors', cache: 'no-store' })
+        .catch(() => {});
+      fetch(`${_appUrl}/favicon.ico`, { method: 'GET', mode: 'no-cors', cache: 'no-store' })
         .catch(() => {});
     } catch (e) {}
 

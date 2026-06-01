@@ -928,10 +928,22 @@
       return 'https://api.temujintechnologies.com/api/v1';
     })();
 
-    // Pre-warm the Render free dyno on page load.
+    // Pre-warm the Render free dynos on page load. Both the API and
+    // the frontend app hibernate after 15 min idle on free tier; cold
+    // start is 30-60s per service. Firing both in parallel so they're
+    // awake by the time the user submits the form or continues to the
+    // app. See personas.html for the full rationale + notes on why
+    // /favicon.ico + mode:'no-cors' for the app ping.
+    const APP_URL = (() => {
+      const h = window.location.hostname;
+      if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:3000';
+      if (h.startsWith('staging.') || h.includes('staging')) return 'https://staging.temujintechnologies.com';
+      return 'https://app.temujintechnologies.com';
+    })();
     try {
       const API_ROOT = API_BASE.replace(/\/api\/v1$/, '');
       fetch(`${API_ROOT}/health`, { method: 'GET', mode: 'cors', cache: 'no-store' }).catch(() => {});
+      fetch(`${APP_URL}/favicon.ico`, { method: 'GET', mode: 'no-cors', cache: 'no-store' }).catch(() => {});
     } catch (e) {}
 
     // ═══════════════════════════════════════════════════════════════════

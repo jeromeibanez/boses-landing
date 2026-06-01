@@ -903,23 +903,39 @@
     })();
 
     // ═══════════════════════════════════════════════════════════════════
-    // Cold-start pre-warm. The Boses API is hosted on Render's free
-    // plan, which spins the service down after 15 minutes of inactivity.
-    // Cold start takes 30-60 seconds, during which the first request
-    // hangs and the user's browser fetch usually times out with a
-    // "Network error" — they bounce, lead lost.
+    // Cold-start pre-warm. The Boses API AND frontend app are both
+    // hosted on Render's free plan, which spins each service down after
+    // 15 minutes of inactivity. Cold start takes 30-60 seconds per
+    // service. Without pre-warming, a visitor hits a cold start once
+    // when the form submits (waking the API), and AGAIN when a
+    // successful submit links them to app.temujintechnologies.com.
     //
-    // Pings /health when /personas loads so the backend is (probably)
-    // awake by the time the user clicks Generate. Best-effort: we swallow
-    // all errors, expose nothing to the user, and don't care about the
-    // response body. The mere act of the request hitting Render is what
-    // wakes the dyno.
+    // Pings both services in parallel when /personas loads so they're
+    // (probably) awake by the time the user clicks Generate or
+    // continues to the app. Best-effort: we swallow all errors, expose
+    // nothing to the user, and don't care about the response bodies.
+    // The mere act of the requests hitting Render is what wakes the
+    // dynos.
     //
-    // /health is at the root, not under /api/v1 — strip the version
-    // suffix from API_BASE to get the API root.
+    // Notes:
+    // - /health on the API is at the root (not /api/v1/health), so we
+    //   strip the version suffix from API_BASE first.
+    // - For the frontend app we ping /favicon.ico — lightest endpoint
+    //   that still triggers the Render dyno wake, served as a static
+    //   asset by Next.js without needing a dedicated route. mode:
+    //   'no-cors' skips the CORS preflight and gives us an opaque
+    //   response we don't need to read.
+    const APP_URL = (() => {
+      const h = window.location.hostname;
+      if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:3000';
+      if (h.startsWith('staging.') || h.includes('staging')) return 'https://staging.temujintechnologies.com';
+      return 'https://app.temujintechnologies.com';
+    })();
     try {
       const API_ROOT = API_BASE.replace(/\/api\/v1$/, '');
       fetch(`${API_ROOT}/health`, { method: 'GET', mode: 'cors', cache: 'no-store' })
+        .catch(() => {});
+      fetch(`${APP_URL}/favicon.ico`, { method: 'GET', mode: 'no-cors', cache: 'no-store' })
         .catch(() => {});
     } catch (e) {}
 
