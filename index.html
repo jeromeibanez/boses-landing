@@ -503,9 +503,19 @@
     }
 
     /* ── Floating mockup cards ── */
-    /* I-2: Mobile-only simplified mockup card. Hidden on desktop
-       where .hero-right shows the full 4-card floating layout. */
-    .hero-mobile-mockup { display: none; margin: 24px auto 0; max-width: 360px; }
+    /* Mobile-only stack of 3 mockup cards. Hidden on desktop, where
+       .hero-right shows the full floating layout. Originally 1 card
+       (persona quote only) — expanded 2026-06-07 to 3 cards (persona +
+       sentiment + insight) so mobile visitors get parity on the "what
+       does the actual product look like" signal. Stack vertically with
+       gap; container becomes flex so spacing is consistent. */
+    .hero-mobile-mockup {
+      display: none;
+      margin: 24px auto 0;
+      max-width: 360px;
+      flex-direction: column;
+      gap: 14px;
+    }
     .mobile-mock-card {
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.10);
@@ -547,6 +557,48 @@
       color: #a5b4fc;
       border-radius: 99px;
       font-size: 0.6875rem; font-weight: 500;
+    }
+
+    /* Reuse desktop mock-* content classes inside mobile cards, but
+       bump font sizes for the bigger viewport. Desktop sizes are tuned
+       for ~196px floating tiles; on a 360px mobile card they look
+       ant-tiny. Scoped overrides keep the desktop CSS untouched. */
+    .mobile-mock-card .mock-section-label {
+      font-size: 0.7rem;
+      margin-bottom: 12px;
+    }
+    .mobile-mock-card .mock-bar-row {
+      gap: 10px;
+      margin-bottom: 9px;
+    }
+    .mobile-mock-card .mock-bar-row:last-child { margin-bottom: 0; }
+    .mobile-mock-card .mock-bar-label {
+      font-size: 0.78rem;
+      width: 60px;
+    }
+    .mobile-mock-card .mock-bar-track { height: 7px; }
+    .mobile-mock-card .mock-bar-pct {
+      font-size: 0.78rem;
+      width: 34px;
+    }
+    .mobile-mock-card .mock-insight-icon {
+      width: 32px; height: 32px;
+      margin-bottom: 10px;
+    }
+    .mobile-mock-card .mock-insight-label {
+      font-size: 0.7rem;
+      margin-bottom: 6px;
+    }
+    .mobile-mock-card .mock-insight-text {
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    /* The insight card gets the same purple gradient as the desktop
+       "Top Recommendation" tile so it visually pops against the other
+       two cards in the stack. */
+    .mobile-mock-card.mobile-mock-insight {
+      background: linear-gradient(135deg, #1e1b4b, #2e1065);
+      border-color: rgba(99,102,241,0.25);
     }
     .hero-right {
       position: relative; height: 520px;
@@ -1617,7 +1669,7 @@
       /* Hero: tighter on mobile */
       .hero { padding: 80px 0 56px; min-height: auto; }
       .hero-right { display: none; }
-      .hero-mobile-mockup { display: block; }
+      .hero-mobile-mockup { display: flex; }
       .scroll-hint { display: none; }
       .hero-flags { gap: 8px; flex-wrap: wrap; justify-content: center; overflow-x: unset; padding-bottom: 0; }
       .section-header { margin-bottom: 32px; }
@@ -1769,14 +1821,20 @@ document.head.appendChild(o)}initApollo();</script>
             Run consumer simulations with AI personas grounded in real local fieldwork across six SEA markets. Research-grade insight — without the agency timeline, the recruiting, or the six-figure budget.
           </p>
 
+          <!-- Audit 2026-06-07: PLG-first CTA hierarchy. Lead a cold
+               visitor into the product (low-friction free persona
+               generation) rather than founder-led sales. Book a Call
+               demotes to secondary — still visible, still clickable,
+               just no longer the headline ask. IDs stay stable so the
+               existing GA4/Apollo click tracking attributes correctly. -->
           <div class="hero-actions fade-in d3">
-            <a href="https://calendar.app.google/2BmDBsSZRwTB783D8" target="_blank" rel="noopener noreferrer" class="btn-primary lg" id="hero-cta">
-              Book a Call
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-            <a href="/personas" class="btn-white" id="hero-personas-cta">
+            <a href="/personas" class="btn-primary lg" id="hero-personas-cta">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="17" cy="7" r="4"/></svg>
               Generate 3 personas free
+            </a>
+            <a href="https://calendar.app.google/2BmDBsSZRwTB783D8" target="_blank" rel="noopener noreferrer" class="btn-white" id="hero-cta">
+              Book a Call
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
 
@@ -1877,12 +1935,15 @@ document.head.appendChild(o)}initApollo();</script>
 
         </div>
 
-        <!-- I-2: Mobile-only single-card mockup. Desktop sees the
-             floating 4-card layout above; mobile sees this stripped
-             one-card version so they still get the "what does the
-             actual product look like" signal that hero-right
-             provides on bigger screens. -->
+        <!-- Mobile-only stacked mockup. Desktop sees the floating
+             4-card layout above; mobile sees this 3-card vertical stack
+             (persona + sentiment + insight) so mobile visitors get
+             parity on the "what does the actual product look like"
+             signal. The desktop cohort card is intentionally dropped on
+             mobile — small avatars / names get cramped and it added the
+             least new info beyond the persona quote. -->
         <div class="hero-mobile-mockup" aria-hidden="true">
+          <!-- Card 1: Persona result + quote -->
           <div class="mobile-mock-card">
             <div class="mobile-mock-head">
               <div class="mobile-mock-av" style="background:#7c3aed">MA</div>
@@ -1898,6 +1959,38 @@ document.head.appendChild(o)}initApollo();</script>
               <span class="mobile-mock-tag">SEA-relevant</span>
               <span class="mobile-mock-tag">Easy to adopt</span>
             </div>
+          </div>
+
+          <!-- Card 2: Sentiment distribution. Reuses desktop mock-bar-*
+               structural classes; mobile font sizes overridden above. -->
+          <div class="mobile-mock-card">
+            <div class="mock-section-label">Sentiment · 8 personas</div>
+            <div class="mock-bar-row">
+              <span class="mock-bar-label">Positive</span>
+              <div class="mock-bar-track"><div class="mock-bar-fill" style="width:67%;background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+              <span class="mock-bar-pct">67%</span>
+            </div>
+            <div class="mock-bar-row">
+              <span class="mock-bar-label">Neutral</span>
+              <div class="mock-bar-track"><div class="mock-bar-fill" style="width:22%;background:linear-gradient(90deg,#6b7280,#9ca3af)"></div></div>
+              <span class="mock-bar-pct">22%</span>
+            </div>
+            <div class="mock-bar-row">
+              <span class="mock-bar-label">Negative</span>
+              <div class="mock-bar-track"><div class="mock-bar-fill" style="width:11%;background:linear-gradient(90deg,#ef4444,#f87171)"></div></div>
+              <span class="mock-bar-pct">11%</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Top Recommendation. Purple gradient via
+               .mobile-mock-insight modifier matches the desktop
+               accent-tile treatment. -->
+          <div class="mobile-mock-card mobile-mock-insight">
+            <div class="mock-insight-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a5b4fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div class="mock-insight-label">Top Recommendation</div>
+            <div class="mock-insight-text">Lead with time-savings in onboarding copy for Manila segment</div>
           </div>
         </div>
       </div>
