@@ -1,6 +1,6 @@
 # Boses by Temujin Technologies
 
-> Boses is an AI-powered market research simulation platform purpose-built for Southeast Asia. It simulates how real Filipino, Indonesian, Vietnamese, Thai, Malaysian, and Singaporean consumers react to products, campaigns, and concepts — using AI personas grounded in on-the-ground ethnographic fieldwork. Research-grade insights in hours, not months.
+> Boses is an AI-powered market research simulation platform. It simulates how real consumers react to products, campaigns, and concepts — using AI personas built for any market you define and grounded in real local consumer context. Research-grade insights in an hour, not months.
 
 ## Product
 
@@ -10,11 +10,11 @@
 - **Free demos:** https://www.temujintechnologies.com/personas (persona generator) and https://www.temujintechnologies.com/concept-test (full concept-test snippet)
 - **Company:** Temujin Technologies
 - **Contact:** hello@temujintechnologies.com
-- **Markets:** Philippines, Singapore, Malaysia, Indonesia, Vietnam, Thailand
+- **Markets:** Any market — you define the target market, demographics, and behaviours. Curated, fieldwork-grounded panels are available; deepest validation to date spans six Southeast Asian markets.
 
 ## What Boses Does
 
-Boses lets product managers, marketers, and strategy teams run consumer simulations without traditional market research. Instead of spending ₱500,000+ (~$9,000+ USD) and 6–12 weeks on focus groups and surveys, teams upload a product brief, select a persona cohort, and run a simulation in minutes to hours. Reports are shareable via public permalinks — no login required for stakeholders.
+Boses lets product managers, marketers, and strategy teams run consumer simulations without traditional market research. Instead of spending $9,000+ and 6–12 weeks on focus groups and surveys, teams upload a product brief, select a persona cohort, and run a simulation in minutes to hours. Reports are shareable via public permalinks — no login required for stakeholders.
 
 ## Research Methods Supported
 
@@ -25,14 +25,11 @@ Boses lets product managers, marketers, and strategy teams run consumer simulati
 5. **Focus Group** — Personas discuss a topic in a two-round moderated session, surfacing consensus and disagreement. Best for: brand positioning, sensitive-topic exploration.
 6. **Conjoint / Trade-Off Analysis** — Present product profiles with varying attributes (price, features, brand) to discover what consumers actually trade off. Best for: pricing, feature prioritization, SKU rationalization.
 
-## Markets Supported (with behavioral context)
+## Markets
 
-- **Philippines (PH)** — ~110M population. High social-commerce adoption (Lazada/Shopee daily). Family-centric purchasing, "baon" school-snack culture, strong word-of-mouth via Viber/Messenger group chats. Personas grounded in Metro Manila, Cebu, Davao, and Mindanao regional contexts.
-- **Indonesia (ID)** — ~280M population, world's 4th-largest country. Tokopedia/Shopee dominant for e-commerce; Gojek embedded in commute + delivery. Strong Jakarta/Surabaya/Bandung regional differences. Halal certification matters across FMCG.
-- **Vietnam (VN)** — ~100M population, young median age. Fast-rising digital payments (MoMo, ZaloPay). Hanoi (north) and Ho Chi Minh City (south) have distinct consumer behavior. Trust signals: family endorsements + Facebook reviews.
-- **Thailand (TH)** — ~70M population. LINE (not WhatsApp) is the primary messaging + commerce platform. Bangkok-vs-upcountry urban-rural divide is meaningful. Buddhist cultural context shapes marketing tone.
-- **Malaysia (MY)** — ~33M population, multi-ethnic (Malay/Chinese/Indian) with halal as a default-on requirement in FMCG. Klang Valley urban purchasing differs sharply from Sabah/Sarawak.
-- **Singapore (SG)** — ~6M population, highest per-capita income in SEA. Multi-lingual, pragmatic value-conscious buying despite high incomes. HDB-flat-living shapes everyday consumption.
+Boses works for any market. You define the target market, demographics, and behaviours, and Boses generates AI personas grounded in that market's real consumer context — not generic Western archetypes or flattened global averages. The grounding methodology captures local purchase drivers, channel behaviours, payment habits, and cultural nuance for whichever market you specify.
+
+Curated, fieldwork-grounded panels are available on request. The platform's deepest validation work to date spans six Southeast Asian markets (Philippines, Indonesia, Vietnam, Thailand, Malaysia, Singapore), and the same grounding methodology extends to new markets.
 
 ## Persona Schema (15 fields)
 
@@ -57,13 +54,13 @@ Each Boses persona includes:
 ## Persona Types
 
 - **AI-generated:** Built from target market parameters (age, location, occupation, income).
-- **Boses-curated:** Validated against real people through on-the-ground ethnographic fieldwork across Southeast Asia.
+- **Boses-curated:** Validated against real people through on-the-ground ethnographic fieldwork.
 
 ## Competitive Differentiation
 
 - 10–100x faster than traditional market research (hours vs. weeks)
 - ~95% cost reduction vs traditional focus groups (~$9,000+ per study → platform subscription)
-- Culturally accurate to SEA — not generic global or Western archetypes
+- Culturally accurate to your target market — not generic global or Western archetypes
 - Single platform for all six major qualitative and quantitative research methods
 - Simulation reports include shareable public links — no login required for stakeholders
 - Pre-validated against real human IDI panels (theme-overlap scoring vs. golden human data)
@@ -74,7 +71,7 @@ Two free, no-account-required public demos let prospects sample Boses without bo
 
 ### Persona Generator — https://www.temujintechnologies.com/personas
 
-Pick a market (PH/SG/MY/ID/VN/TH) → describe your audience (20-1000 chars) → complete Cloudflare Turnstile captcha → submit work email (Gmail/Yahoo not accepted) → receive 3 detailed personas in 20-30 seconds → share via permalink.
+Pick a demo market (PH/SG/MY/ID/VN/TH) → describe your audience (20-1000 chars) → complete Cloudflare Turnstile captcha → submit work email (Gmail/Yahoo not accepted) → receive 3 detailed personas in 20-30 seconds → share via permalink. (The free demo covers six markets; the full platform works for any market you define.)
 
 ### Concept Test — https://www.temujintechnologies.com/concept-test
 

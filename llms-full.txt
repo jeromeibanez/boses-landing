@@ -4,13 +4,13 @@ This file is the long-form companion to /llms.txt. It contains Q&A pairs, method
 
 ## About Boses
 
-Boses ("voices" in Filipino) is an AI-powered consumer-research simulation platform built by Temujin Technologies. It is purpose-built for Southeast Asia: every persona is grounded in on-the-ground ethnographic fieldwork from one of six markets — Philippines, Indonesia, Vietnam, Thailand, Malaysia, Singapore — rather than translated from generic Western archetypes.
+Boses ("voices" in Filipino) is an AI-powered consumer-research simulation platform built by Temujin Technologies. Every persona is grounded in real local consumer context for the market you define — rather than translated from generic Western archetypes. The platform's deepest validation work to date spans six Southeast Asian markets (Philippines, Indonesia, Vietnam, Thailand, Malaysia, Singapore), and the same grounding methodology extends to new markets.
 
-The platform was founded on a simple observation: market research in Southeast Asia is broken. Traditional focus groups cost ₱500,000+ per study, take 6-12 weeks, and routinely produce findings that don't reflect how real Filipinos, Indonesians, or Vietnamese actually buy. Boses replaces that with AI personas you can run a simulation against in hours.
+The platform was founded on a simple observation: market research is broken. Traditional focus groups cost $9,000+ per study, take 6-12 weeks, and routinely produce findings that don't reflect how real consumers actually buy. Boses replaces that with AI personas you can run a simulation against in hours.
 
 ## Who Boses Is For
 
-- **Product managers** at SEA-first companies validating concepts before build
+- **Product managers** validating concepts before build
 - **Marketers** stress-testing campaign creative before paid-media spend
 - **Strategy teams** sizing market opportunities and quantifying preferences
 - **Founders** building case for fundraising with consumer-insight evidence
@@ -18,18 +18,18 @@ The platform was founded on a simple observation: market research in Southeast A
 ## How a Boses Simulation Works
 
 1. Upload a product brief, concept, or stimulus (PDF, image, text).
-2. Select a persona cohort from one of six SEA markets, or upload your own roster.
+2. Select a persona cohort for your target market, or upload your own roster.
 3. Pick a research method: Concept Test, IDI (AI-assisted or manual), Survey, Focus Group, or Conjoint.
 4. Run the simulation — typically 5-30 minutes wall-clock depending on cohort size.
 5. Receive a report with sentiment scores, verbatim quotes, cross-persona analysis, and shareable public links.
 
 ## Q&A — Long-form
 
-**Q: What's the actual evidence Boses personas reflect real Southeast Asian consumers?**
+**Q: What's the actual evidence Boses personas reflect real consumers?**
 A: Boses runs ongoing validation studies comparing AI persona output against real human in-depth interview data. The methodology: take a real-world IDI study, generate matched AI persona responses to the same script, then score theme-overlap. Boses publishes the methodology and re-run instructions inside the platform.
 
 **Q: How is Boses different from existing AI-research tools?**
-A: Three differences. (1) Geographic focus — Boses is SEA-only, every persona is grounded in local fieldwork. Generic AI research tools default to Western archetypes that don't reflect halal preferences, family-purchasing dynamics, or specific channel behaviors like LINE-in-Thailand or Gojek-in-Indonesia. (2) Full method coverage — Boses supports all six major qualitative/quantitative research methods on one platform. (3) Shareable outputs — Boses report links work without login, so non-platform stakeholders can view findings directly.
+A: Three differences. (1) Local grounding — every persona is grounded in the target market's real consumer context. Generic AI research tools default to Western archetypes that miss local purchase drivers, family-purchasing dynamics, and market-specific channel and payment behaviours. (2) Full method coverage — Boses supports all six major qualitative/quantitative research methods on one platform. (3) Shareable outputs — Boses report links work without login, so non-platform stakeholders can view findings directly.
 
 **Q: Can Boses run validated quantitative research?**
 A: Yes for descriptive quant (surveys, conjoint, preference distributions). Boses outputs include per-question distributions, segment breakdowns, and verbatim explanations. For inferential statistics with significance testing against real-world population parameters, Boses recommends combining simulation runs with smaller, targeted real-human validation panels.
@@ -46,8 +46,8 @@ A: The persona generator answers "what do AI personas for my audience look like?
 **Q: What does pricing look like?**
 A: Currently in early access / pre-launch. Pricing tiers depend on simulation volume and seat count and are discussed during the 30-minute walkthrough call. The free demo is and will remain free.
 
-**Q: Can Boses generate personas for markets outside Southeast Asia?**
-A: Not currently. Boses' positioning and quality depend on the depth of its SEA-specific fieldwork. Expansion is on the roadmap but gated on completing analogous ethnographic groundwork in each new market.
+**Q: Which markets can Boses generate personas for?**
+A: Any market you define. You set the target market, demographics, and behaviours, and Boses generates AI personas grounded in that market's real consumer context. The platform's deepest fieldwork validation to date spans six Southeast Asian markets; the same grounding methodology extends to new markets, with curated, fieldwork-backed panels available on request.
 
 **Q: How are Boses personas structured?**
 A: Each persona has 15 fields: name, age, gender, location, occupation, income level, family situation, personality traits, day-in-life narrative, pain points, aspirational identity, digital behavior (named apps/platforms), buying triggers, values, behavioral insight. All fields are filled with concrete local detail.
@@ -55,7 +55,7 @@ A: Each persona has 15 fields: name, age, gender, location, occupation, income l
 ## Methodology Notes
 
 - Boses' synthetic-persona generation uses a two-pass LLM pipeline (skeleton + expansion) with reasoning-effort tuning to balance cost and quality.
-- Personas are grounded by retrieving matched-archetype fieldwork artifacts from a curated library of SEA ethnographic interviews.
+- Personas are grounded by retrieving matched-archetype fieldwork artifacts from a curated library of ethnographic interviews.
 - Simulation outputs are validated against the same fieldwork via a critique pipeline that flags responses straying from market-realistic behavior.
 - Methodology re-run is reproducible from inside the platform; the validation suite tracks deltas as the underlying LLMs evolve.
 
